@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var file = "test.db";
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
@@ -16,11 +17,46 @@ function createDbTables(){
 			toID INTEGER,\
 			msg TEXT,\
 			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)");
+	db.run("CREATE TABLE IF NOT EXISTS listing\
+			(user_id INTEGER PRIMARY KEY,\
+			 location TEXT,\
+			 price TEXT,\
+			 status TEXT,\
+			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+			 hash TEXT)");
 }
 
 createDbTables();
 
 app.use(express.json());
+app.use(cors());
+app.use(express.bodyParser());
+app.use(app.router);
+
+app.post("/add_listing", function(req, res){
+	console.log(req.body);
+	var location = req.body.location;
+	var price = req.body.price;
+	var status = req.body.status;
+	var userId = req.body.user_id;
+	var hash = "ABCD";
+	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
+			VALUES ($userId, $location, $price, $status, $hash)", 
+			{
+				$userId : userId,
+				$location : location,
+				$price : price,
+				$status : status,
+				$hash : hash
+			});
+	res.send({"status" : "success"});
+});
+
+app.get("/get_listings", function(req, res){
+	db.all("SELECT * FROM listing", function(err, rows){
+		res.send(rows);
+	});
+});
 
 // To get chats between 2 people
 app.get('/get_chats', function(req,res) {
@@ -53,28 +89,15 @@ app.get('/get_all_chats', function(req,res) {
   });
 });
 
-
-
 // To update chat when a user sends a message
 app.post('/send_message', function(req, res){
-  console.log("test");
-  // req.body.whatever
-  var query_string2 = "INSERT INTO chats (fromID, toID, msg) values (" 
-    + req.body.from + ", " + req.body.to + ", " + req.body.msg + ")";
-
-  console.log(req.body.msg);
-
-  
-  var query_string = "INSERT INTO chats(msg) VALUES(" + req.body.msg + ")";
-
+  var query_string = "INSERT INTO chats (fromID, toID, msg) values (" 
+    + req.body.from + ", " + req.body.to + ", '" + req.body.msg + "')";
 
   db.serialize(function(){
-    // console.log("1");
     db.all(query_string, function(err, rows) {
       if (err){
-        console.log(err);
       }
-      // console.log("2");
       res.send(rows);
     });
   });
