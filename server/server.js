@@ -6,13 +6,19 @@ var app = express();
 
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
-			(id INTEGER PRIMARY KEY AUTO INCREMENT\
-			 name TEXT\
-			 email TEXT\
-			 phone INTEGER)");	
+			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
+			 name TEXT,\
+			 email TEXT,\
+			 phone INTEGER)");
+	db.run("CREATE TABLE IF NOT EXISTS chats\
+			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
+			fromID INTEGER,\
+			toID INTEGER,\
+			msg TEXT,\
+			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)");
 }
 
-// createDbTables();
+createDbTables();
 
 // To get chats between 2 people
 app.get('/get_chats', function(req,res) {
