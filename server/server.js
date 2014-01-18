@@ -16,6 +16,13 @@ function createDbTables(){
 			toID INTEGER,\
 			msg TEXT,\
 			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)");
+	db.run("CREATE TABLE IF NOT EXISTS listing\
+			(user_id INTEGER PRIMARY KEY,\
+			 location TEXT,\
+			 price TEXT,\
+			 status TEXT,\
+			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+			 hash TEXT)");
 }
 
 createDbTables();
