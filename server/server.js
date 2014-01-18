@@ -6,6 +6,27 @@ var db = new sqlite3.Database(file);
 var app = express();
 var request = require("request");
 
+var express = require("express");
+var file = "test.db";
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(file);
+// var app = express();
+var passport = require('passport');
+
+app.configure(function() {
+  app.use(express.static('public'));
+  app.use(express.cookieParser());
+  app.use(express.bodyParser());
+  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(app.router);
+});
+
+
+require("./fblogin")(app,db,passport);
+
+
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
 			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
@@ -159,8 +180,8 @@ function venueInformation (error, response, body) {
   	}
 }
 
-app.get('/', function(req, res){
-  res.send('hello world');
-});
+// app.get('/', function(req, res){
+//   res.send('hello world');
+// });
 
 app.listen(3000);
