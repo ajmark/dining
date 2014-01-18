@@ -107,6 +107,7 @@ app.get('/success', function(req,res) {
 	});
 	req.session.accessToken = req.user.accessToken;
 	res.send(req.user);
+	res.redirect("/choose");
     // res.send("you're logged in with facebook!");
 });
 
@@ -185,12 +186,11 @@ app.post("/api/add_listing", function(req, res){
 	var location = req.body.location;
 	var price = req.body.price;
 	var status = req.body.status;
-	var userId = req.body.user_id;
 	var hash = md5(req.body); //doesn't hash timestamp; idk if this is desirable behaviour or not
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
-				$userId : userId,
+				$userId : req.session.userId,
 				$location : location,
 				$price : price,
 				$status : status,
@@ -317,6 +317,7 @@ app.get('/api/refine_search', function(req,res) {
 		res.send(venueInformation(error,response,body));
 	});
 });
+
 
 /** helper function for finding venues */
 function venueInformation (error, response, body) {
