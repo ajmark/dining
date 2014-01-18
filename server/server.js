@@ -4,8 +4,8 @@ var file = "test.db";
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
-var request = require("request");
-var md5 = require('MD5');
+var request = require('request');
+// var md5 = require('MD5');
 
 /* noob tim creating SQL tables */
 function createDbTables(){
@@ -189,20 +189,20 @@ function venueInformation (error, response, body) {
   	}
 }
 
-app.get('/hi', function (req,res) {
-	request({
-		uri: "http://textbelt.com/text",
-		number: 3016421494,
-		message: "oh heyyy",
-	  	method: "POST",
-	  	timeout: 10000,
-	  	followRedirect: true,
-	  	maxRedirects: 10
-	}, 
-	function(error, response,body) {
-		console.log(response);
+
+// SMS things
+app.get('/match_made', function (req,res) {
+  request.post(
+    'http://textbelt.com/text',
+    {
+      form: { number: req.query.number, message: "A match has been found for you!!! \
+        Visit the app to find out who you're matched with! :)"}
+    },
+	function(error, response, body) {
+		console.log(body);
 		console.log("something");
 	});
+  // console.log(res);
 });
 
 app.get('/', function(req, res){
