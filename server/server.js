@@ -24,18 +24,6 @@ app.get('/get_coords', function(req,res) {
 	}
 });
 
-var httpProxy = require("http-proxy");
-var options = {
-                hostnameOnly : true,
-                router: {
-                            "www.dinewithdinex.com" : "127.0.0.1:8000",
-                            "dinewithdinex.com" : "127.0.0.1:8000",
-                            "api.dinewithdinex.com" : "127.0.0.1:3000"
-                }
-            }
-
-
-
 app.get('/get_chats', function(req,res) {
 	var query_string = "select * from chats where fromID = " + req.query.from;
 
