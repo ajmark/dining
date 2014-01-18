@@ -25,13 +25,6 @@ app.configure(function() {
 ********************************/
 
 var FacebookStrategy = require('passport-facebook').Strategy;
-//blame tim for this; creates fb user entry table
-function createDbTables() {
-    db.run("CREATE TABLE IF NOT EXISTS fbuser\
-            (id INTEGER,\
-            fbid INTEGER)");
-}
-createDbTables();
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -136,6 +129,9 @@ function createDbTables(){
 			 status TEXT,\
 			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
 			 hash TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS fbuser\
+            (id INTEGER,\
+            fbid INTEGER)");
 }
 
 createDbTables();
@@ -143,7 +139,7 @@ createDbTables();
 app.use(express.json());
 app.use(cors());
 
-app.post("/add_listing", function(req, res){
+app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
 	var location = req.body.location;
 	var price = req.body.price;
@@ -162,7 +158,7 @@ app.post("/add_listing", function(req, res){
 	res.send({"status" : "success", 'hash' : hash});
 });
 
-app.get("/get_listings", function(req, res){
+app.get("/api/get_listings", function(req, res){
 	//lookup by hash, by recency or by ??? (who cares man tim forgot so I forgot too)
 	if(req.query.by == "hash") {
 		var query_string = "select * from listing where hash = \"" + req.query.hash + "\"";
@@ -183,7 +179,7 @@ app.get("/get_listings", function(req, res){
 });
 
 // To get chats between 2 people
-app.get('/get_chats', function(req,res) {
+app.get('/api/get_chats', function(req,res) {
 	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
   + req.query.from + " AND toID = " + req.query.to
   + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
@@ -200,7 +196,7 @@ app.get('/get_chats', function(req,res) {
 });
 
 // To get all chats for debugging purposes
-app.get('/get_all_chats', function(req,res) {
+app.get('/api/get_all_chats', function(req,res) {
   var query_string = "SELECT * FROM chats ";
 
   db.serialize(function() {
@@ -214,7 +210,7 @@ app.get('/get_all_chats', function(req,res) {
 });
 
 // To update chat when a user sends a message
-app.post('/send_message', function(req, res){
+app.post('/api/send_message', function(req, res){
   var query_string = "INSERT INTO chats (fromID, toID, msg) values (" 
     + req.body.from + ", " + req.body.to + ", '" + req.body.msg + "')";
 
@@ -264,7 +260,7 @@ var http = require('http');
 // });
 
 /** given coordinates, returns 30 nearby venues */
-app.get('/get_coords', function(req,res) {
+app.get('/api/get_coords', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
 			req.query.lat + "," + req.query.lon + 
@@ -281,7 +277,7 @@ app.get('/get_coords', function(req,res) {
 });
 
 /** adds a search term to the venues queries */
-app.get('/refine_search', function(req,res) {
+app.get('/api/refine_search', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
 			req.query.lat + "," + req.query.lon + 
@@ -312,7 +308,7 @@ function venueInformation (error, response, body) {
 }
 
 // SMS things
-app.get('/match_made', function (req,res) {
+app.get('/api/match_made', function (req,res) {
   request.post(
     'http://textbelt.com/text',
     {
