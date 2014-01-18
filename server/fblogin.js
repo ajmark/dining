@@ -40,65 +40,42 @@ passport.use(new FacebookStrategy({
   function(accessToken, refreshToken, profile, done) {
     //check user table for anyone with a facebook ID of profile.id
     //tim pls set up server and shit and put some SQL here
-            // User.findOne({
-            //     'facebook.id': profile.id 
-            // }, function(err, user) {
-            //     if (err) {
-            //         return done(err);
-            //     }
-            //     //No user was found... so create a new user with values from Facebook (all the profile. stuff)
-            //     if (!user) {
-            //         user = new User({
-            //             name: profile.displayName,
-            //             email: profile.emails[0].value,
-            //             username: profile.username,
-            //             provider: 'facebook',
-            //             //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
-            //             facebook: profile._json
-            //         });
-            //         user.save(function(err) {
-            //             if (err) console.log(err);
-            //             return done(err, user);
-            //         });
-            //     } else {
-            //         //found user. Return
-            //         return done(err, user);
-            //     }
-            console.log(profile);
-            //this is a very bad order to do it in. blame tim.
-        	var query_string = "select id from fbuser where fbid = " + profile.id;
-        	db.serialize(function() {
-        		db.get(query_string, function(err, rows) {
-        			if(err) {
-        				console.log(err);
-        			}
-        			if(!rows) { //user is registering
-        				var qs = "insert into user\
-        					    (name)\
-        					    values (" + "\"" + profile.displayName + "\")";
-        				console.log(qs);
-        				db.run(qs);
-        				db.get("select last_insert_rowid()", function(err, rows) {
-        					if(err) {
-        						console.log(err);
-        					}
-        					console.log(rows['last_insert_rowid()']);
-        					var qs = "insert into fbuser\
-        						    values ("+ rows['last_insert_rowid()'] + "," + profile.id + ")";
-        					console.log(qs);
-        					db.run(qs);
-        				});
-        			}
-        		})
-        	});
-            return done(null, profile.displayName);
-            })
+        console.log(profile);
+        //this is a very bad order to do it in. blame tim.
+    	var query_string = "select id from fbuser where fbid = " + profile.id;
+    	db.serialize(function() {
+    		db.get(query_string, function(err, rows) {
+    			if(err) {
+    				console.log(err);
+    			}
+    			if(!rows) { //user is registering
+    				console.log(profile.emails[0]);
+    				var qs = "insert into user\
+    					    (name,email)\
+    					    values (" + "\"" + profile.displayName + "\",\"" + profile.emails[0].value + "\")";
+    				console.log(qs);
+    				db.run(qs);
+    				db.get("select last_insert_rowid()", function(err, rows) {
+    					if(err) {
+    						console.log(err);
+    					}
+    					console.log(rows['last_insert_rowid()']);
+    					var qs = "insert into fbuser\
+    						    values ("+ rows['last_insert_rowid()'] + "," + profile.id + ")";
+    					console.log(qs);
+    					db.run(qs);
+    				});
+    			}
+    		})
+    	});
+        return done(null, profile.displayName);
+        })
     );
 
 // Redirect the user to Facebook for authentication.  When complete,
 // Facebook will redirect the user back to the application at
 //     /auth/facebook/callback
-app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']}));
 
 // Facebook will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
