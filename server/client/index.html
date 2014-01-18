@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Dine with DineX</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,600' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/app.css">
 </head>
@@ -17,15 +17,16 @@
   <!-- Templates -->
   <script type="text/template" id="tpl-index">
     <div id="page-index">
-      <a href="/auth/facebook" rel="nojs" class="signin-btn">Sign in with facebook</a>
+      <img src="/img/dwd-logo.png" width="300" />
+      <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
     </div>
   </script>
 
   <script type="text/template" id="tpl-choose">
     <div id="page-choose">
       <h1>I want to...</h1>
-      <a class="choice sell" href="/sell">share my funds</a>
-      <a class="choice buy"href="/buy">look for sharers</a>
+      <a class="full-btn choice buy"href="/buy">look for a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
+      <a class="full-btn choice sell" href="/sell">share my funds <br /><small>I am a meallionaire.</small></a>
     </div>
   </script>
 
