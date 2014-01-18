@@ -65,6 +65,20 @@ app.get("/get_listings", function(req, res){
 			res.send(rows);
 		});
 	}
+	else if(req.query.by == "recent") {
+		if(!req.query.until) {
+			res.send("fauck u");
+		}
+		var query_string = "select * from listing where time_listed >= (select datetime('now','-" + req.query.until + " hours'))";
+		db.serialize(function() {
+			db.all(query_string, function(err, rows) {
+				if(err) {
+					console.log(err);
+				}
+				res.send(rows);
+			});
+		});
+	}
 	else {
 		console.log("i don't know how to handle this");
 		res.send(null);
