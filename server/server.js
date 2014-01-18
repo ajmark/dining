@@ -3,6 +3,7 @@ var file = "test.db";
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
+var request = require("request");
 
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
@@ -41,16 +42,85 @@ app.get('/get_chats', function(req,res) {
 });
 
 var http = require('http');
+// app.get('/get_coords', function(req,res) {
+// 	console.log(req.query.lon);
+// 	console.log(req.query.lat);
+
+// 	var options = {
+// //  		host: 'api.foursquare.com',
+//   //		path: '/v2/venues/search?ll=' + 
+//   		host: "dinewithdinex.com:3000",
+//   		path: "/"
+// //  		req.query.lon + "," + req.query.lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
+// 	};
+
+// callback = function(response) {
+//   var str = '';
+
+//   //another chunk of data has been recieved, so append it to `str`
+//   response.on('data', function (chunk) {
+//     str += chunk;
+//   });
+
+//   //the whole response has been recieved, so we just print it out here
+//   response.on('end', function () {
+//   	res.send("something below");
+//     res.send(str);
+//     res.send('hello');
+//     console.log(str);
+//     console.log("printed above");
+//   //  JSON.parse(str);
+//   });
+// }
+
+// http.request(options, callback).end();
+
+// });
+
 app.get('/get_coords', function(req,res) {
-
-	var lon = req.query.lon;
-	var lat = req.query.lat;
-
-	var options = {
-  		host: 'api.foursquare.com',
-  		path: 'v2/venues/search?ll=' + lon + "," + lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
-	};
+	request({
+		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
+			req.query.lon + "," + req.query.lat + 
+			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101",
+	  	method: "GET",
+	  	timeout: 10000,
+	  	followRedirect: true,
+	  	maxRedirects: 10
+	}, 
+	
+	function(error, response, body) {
+		venueInformation(error,response,body);
+	});
 });
+
+app.get('/refine_search', function(req,res) {
+	request({
+		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
+			req.query.lon + "," + req.query.lat + 
+			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101"
+			+ "&query=" + req.query.term,
+	  	method: "GET",
+	  	timeout: 10000,
+	  	followRedirect: true,
+	  	maxRedirects: 10
+	}, 
+	
+	function(error, response, body) {
+		venueInformation(error,response,body);
+	});
+});
+
+function venueInformation (error, response, body) {
+	var searchObj = JSON.parse(body);
+	var venues = searchObj.response.venues;
+
+	for (index in venues) {
+		console.log("Venue Name: " + venues[index].name);
+		console.log("Venue ID: " + venues[index].id);
+		console.log("Lat: " + venues[index].location.lat);
+		console.log("Long: " + venues[index].location.lng);
+  	}
+}
 
 app.get('/', function(req, res){
   res.send('hello world');
