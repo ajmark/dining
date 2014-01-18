@@ -16,13 +16,17 @@
 
   <!-- Templates -->
   <script type="text/template" id="tpl-index">
-    
-    <a href="/auth/facebook" rel="nojs">Sign in with facebook</a>
+    <div id="page-index">
+      <a href="/auth/facebook" rel="nojs" class="signin-btn">Sign in with facebook</a>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-choose">
-    <a href="/sell">Seller</a>
-    <a href="/buy">Buyer</a>
+    <div id="page-choose">
+      <h1>I want to...</h1>
+      <a class="choice sell" href="/sell">share my funds</a>
+      <a class="choice buy"href="/buy">look for sharers</a>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-sell">
