@@ -147,28 +147,6 @@ createDbTables();
 //app.use(cors());
 
 app.post("/api/add_listing", function(req, res){
-	//insert did not work properly, life is hard
-	//remember tim wrote it not me
-	/* {
-  "_elements": [
-    {
-      "user_id": 1,
-      "location": "exchange",
-      "price": "6.45",
-      "status": "cool",
-      "time_listed": "2014-01-18 19:55:35",
-      "hash": "ab61cfc799958670ff3b09633c755a44"
-    },
-    {
-      "user_id": 2,
-      "location": "easianaprice=7.50",
-      "price": null,
-      "status": "violent",
-      "time_listed": "2014-01-18 19:56:00",
-      "hash": "3960a707984c5882c5e8f3a32c12b7f4"
-    }
-  ]
-}*/
 	console.log(req.body);
 	var location = req.body.location;
 	var price = req.body.price;
