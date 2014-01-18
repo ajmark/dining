@@ -362,6 +362,7 @@ app.get('/match_made_email', function (req,res) {
   mailgun.messages.send(data, function (error, response, body) {
     console.log(body);
   });
+});
 
 app.get("/*", function(req, res){
     res.sendfile("client/index.html");
