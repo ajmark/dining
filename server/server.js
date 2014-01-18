@@ -5,8 +5,8 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 var request = require("request");
+var md5 = require('MD5');
 
-// var app = express();
 var passport = require('passport');
 
 app.configure(function() {
@@ -115,6 +115,7 @@ app.get('/fail', function(req,res) {
 ******** end fb login *********
 ******************************/
 
+/* noob tim creating SQL tables */
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
 			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
@@ -221,6 +222,7 @@ var http = require('http');
 
 // });
 
+/** given coordinates, returns 30 nearby venues*/
 app.get('/get_coords', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
@@ -237,6 +239,7 @@ app.get('/get_coords', function(req,res) {
 	});
 });
 
+/** adds a search term to the venues queries */
 app.get('/refine_search', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
@@ -269,6 +272,24 @@ function venueInformation (error, response, body) {
 app.get('/hello', function(req, res){
 	res.send(req.session);
  	// res.send('hello world');
+app.get('/hi', function (req,res) {
+	request({
+		uri: "http://textbelt.com/text",
+		number: 3016421494,
+		message: "oh heyyy",
+	  	method: "POST",
+	  	timeout: 10000,
+	  	followRedirect: true,
+	  	maxRedirects: 10
+	}, 
+	function(error, response,body) {
+		console.log(response);
+		console.log("something");
+	});
+});
+
+app.get('/', function(req, res){
+  res.send('hello world');
 });
 
 app.listen(3000);
