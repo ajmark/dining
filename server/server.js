@@ -13,9 +13,10 @@ app.configure(function() {
   app.use(express.static('public'));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: 'such doge very cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(express.static(__dirname + "/client"));
   app.use(app.router);
 });
 
@@ -93,7 +94,7 @@ app.get('/auth/facebook/callback',
     passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/success'}),
     function(req, res) {
         console.log("great success!");
-        res.redirect('/success');
+        res.redirect('/choose');
 });
 
 app.get('/', function(req,res) {
@@ -323,6 +324,10 @@ app.get('/match_made', function (req,res) {
 		console.log("something");
 	});
   // console.log(res);
+});
+
+app.get("/*", function(req, res){
+    res.sendfile("client/index.html");
 });
 
 app.listen(3000);
