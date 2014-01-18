@@ -7,6 +7,17 @@ var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database(file);
 var app = express();
 
+var httpProxy = require("http-proxy");
+var options = {
+                hostnameOnly : true,
+                router: {
+                            "www.dinewithdinex.com" : "127.0.0.1:8000",
+                            "dinewithdinex.com" : "127.0.0.1:8000",
+                            "api.dinewithdinex.com" : "127.0.0.1:3000"
+                }
+            }
+
+
 var chatlogs = sql.define({
 	name: 'chats',
 	columns: [from, to, msg, time]
@@ -32,3 +43,5 @@ app.get('/', function(req, res){
 });
 
 app.listen(3000);
+var proxyServer = httpProxy.createServer(options);
+proxyServer.listen(80);
