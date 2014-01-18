@@ -9,6 +9,7 @@ var md5 = require('MD5');
 var api_key = 'key-1mj5tl1vgic26dvad2iruu9uun5vmq66';
 var domain = 'sandbox87220.mailgun.org';
 var mailgun = require('mailgun-js')(api_key, domain);
+var PriorityQueue = require('priorityqueuejs');
 
 var passport = require('passport');
 
@@ -143,12 +144,34 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/api/add_listing", function(req, res){
+	//insert did not work properly, life is hard
+	//remember tim wrote it not me
+	/* {
+  "_elements": [
+    {
+      "user_id": 1,
+      "location": "exchange",
+      "price": "6.45",
+      "status": "cool",
+      "time_listed": "2014-01-18 19:55:35",
+      "hash": "ab61cfc799958670ff3b09633c755a44"
+    },
+    {
+      "user_id": 2,
+      "location": "easianaprice=7.50",
+      "price": null,
+      "status": "violent",
+      "time_listed": "2014-01-18 19:56:00",
+      "hash": "3960a707984c5882c5e8f3a32c12b7f4"
+    }
+  ]
+}*/
 	console.log(req.body);
 	var location = req.body.location;
 	var price = req.body.price;
 	var status = req.body.status;
-	var userId = req.body.user_id;
-	var hash = md5(req.body); //doesn't hash timestamp; idk if this is desirable behaviour or not
+	var userId = req.body.user_id; //this should be a real user id (like the one used in our database)
+	var hash = md5(req.body.location + req.body.price + req.body.status + req.body.user_id);
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
@@ -193,6 +216,21 @@ app.get("/api/get_listings", function(req, res){
 	// db.all("SELECT * FROM listing", function(err, rows){
 	// 	res.send(rows);
 	// });
+});
+
+var pq = new PriorityQueue(function (a,b) {
+	return a.price - b.price;
+});
+app.get("/api/get_all_listings_ascending", function(req,res) {
+	db.serialize(function () {
+		db.each("select * from listing", function(err, row) {
+			if(err) {
+				console.log(err);
+			}
+			pq.enq(row);
+		}, function(err, rows) {
+		res.send(pq);
+	})})
 });
 
 // To get chats between 2 people
