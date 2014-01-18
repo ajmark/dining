@@ -11,6 +11,7 @@
     "sqlite3": "latest",
     "sql": "latest",
     "passport": "latest",
-    "passport-facebook": "latest"
+    "passport-facebook": "latest",
+    "http-proxy": "latest"
   }
 }
