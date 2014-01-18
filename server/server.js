@@ -9,8 +9,12 @@ var md5 = require('MD5');
 var api_key = 'key-1mj5tl1vgic26dvad2iruu9uun5vmq66';
 var domain = 'sandbox87220.mailgun.org';
 var mailgun = require('mailgun-js')(api_key, domain);
+var PriorityQueue = require('priorityqueuejs');
 
 var passport = require('passport');
+
+var http = require('http');
+var https = require('https');
 
 app.configure(function() {
   app.use(express.static('public'));
@@ -73,7 +77,8 @@ passport.use(new FacebookStrategy({
                 }
             })
         });
-        return done(null, profile.displayName);
+		profile.accessToken = accessToken;
+        return done(null, profile);
         })
     );
 
@@ -87,7 +92,7 @@ app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']}))
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/choose'}),
+    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/success'}),
     function(req, res) {
         console.log("great success!");
         res.redirect('/choose');
@@ -98,9 +103,15 @@ app.get('/', function(req,res) {
 });
 
 app.get('/success', function(req,res) {
-	req.session.test = "hello";
-    res.send("you're logged in with facebook!");
-
+	console.log(req.user);
+	console.log(req.user.id);
+	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
+		req.session.userId = row.id;
+	});
+	req.session.accessToken = req.user.accessToken;
+	res.send(req.user);
+	res.redirect("/choose");
+    // res.send("you're logged in with facebook!");
 });
 
 app.get('/fail', function(req,res) {
@@ -111,6 +122,55 @@ app.get('/fail', function(req,res) {
 /******************************
 ******** end fb login *********
 ******************************/
+
+/** get facebook friends */
+app.get('/get_friends', function(req,res) {
+	var options = {
+        host: 'graph.facebook.com',
+        port: 443,
+        path: '/me/friends' + '?access_token=' + req.user.accessToken,
+        method: 'GET'
+    };
+
+    var buffer = ''; //this buffer will be populated with the chunks of the data received from facebook
+    var request = https.get(options, function(result){
+        result.setEncoding('utf8');
+        result.on('data', function(chunk){
+            buffer += chunk;
+        });
+
+    result.on('end', function(){
+       	var friends = JSON.parse(buffer);
+        var friendList = friends.data;
+
+        //stringing together all friends' ids
+        var ids = '(';
+        for (i in friendList) {
+        	ids += friendList[i].id + ",";
+        }
+        //for last comma
+        ids = ids.substring(0,ids.length - 1) + ")";
+
+		db.all("SELECT id\
+			    FROM fbuser\
+			    	INNER JOIN listing\
+			    	ON fbuser.id=listing.user_id\
+			    WHERE fbuser.fbid IN " + ids, function(err, rows){
+			    //	console.log(rows);
+			res.send(rows);
+		});
+        });
+    });
+
+    request.on('error', function(e){
+        console.log('error from facebook.getFbData: ' + e.message)
+    });
+
+    request.end();
+});
+
+/** */
+
 
 /* noob tim creating SQL tables */
 function createDbTables(){
@@ -139,20 +199,19 @@ function createDbTables(){
 
 createDbTables();
 
-app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
 app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
 	var location = req.body.location;
 	var price = req.body.price;
 	var status = req.body.status;
-	var userId = req.body.user_id;
-	var hash = md5(req.body); //doesn't hash timestamp; idk if this is desirable behaviour or not
+	var userId = req.body.user_id; //this should be a real user id (like the one used in our database)
+	var hash = md5(req.body.location + req.body.price + req.body.status + req.body.user_id);
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
-				$userId : userId,
+				$userId : req.session.userId,
 				$location : location,
 				$price : price,
 				$status : status,
@@ -193,6 +252,21 @@ app.get("/api/get_listings", function(req, res){
 	// db.all("SELECT * FROM listing", function(err, rows){
 	// 	res.send(rows);
 	// });
+});
+
+var pq = new PriorityQueue(function (a,b) {
+	return a.price - b.price;
+});
+app.get("/api/get_all_listings_ascending", function(req,res) {
+	db.serialize(function () {
+		db.each("select * from listing", function(err, row) {
+			if(err) {
+				console.log(err);
+			}
+			pq.enq(row);
+		}, function(err, rows) {
+		res.send(pq);
+	})})
 });
 
 // To get chats between 2 people
@@ -240,41 +314,6 @@ app.post('/api/send_message', function(req, res){
   });
 });
 
-var http = require('http');
-// app.get('/get_coords', function(req,res) {
-// 	console.log(req.query.lon);
-// 	console.log(req.query.lat);
-
-// 	var options = {
-// //  		host: 'api.foursquare.com',
-//   //		path: '/v2/venues/search?ll=' + 
-//   		host: "dinewithdinex.com:3000",
-//   		path: "/"
-// //  		req.query.lon + "," + req.query.lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
-// 	};
-
-// callback = function(response) {
-//   var str = '';
-
-//   //another chunk of data has been recieved, so append it to `str`
-//   response.on('data', function (chunk) {
-//     str += chunk;
-//   });
-
-//   //the whole response has been recieved, so we just print it out here
-//   response.on('end', function () {
-//   	res.send("something below");
-//     res.send(str);
-//     res.send('hello');
-//     console.log(str);
-//     console.log("printed above");
-//   //  JSON.parse(str);
-//   });
-// }
-
-// http.request(options, callback).end();
-
-// });
 
 /** given coordinates, returns 30 nearby venues */
 app.get('/api/get_coords', function(req,res) {
@@ -315,22 +354,25 @@ app.get('/api/refine_search', function(req,res) {
 	});
 });
 
+
 /** helper function for finding venues */
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
 	var venues = searchObj.response.venues;
-  var result = [];
+  	var result = [];
 
 	for (i in venues) {
     result.push({
       name: venues[i].name,
       id: venues[i].id,
       dist: venues[i].location.dist,
-      hereNow: venues[i].hereNow.count
+      hereNow: venues[i].hereNow.count,
+      checkCount: venues[i].stats.checkinsCount
     });
   }
 
-  return result;
+  return result.sort(function(a,b){return b.checkCount - a.checkCount});
+  //return venues;
 }
 
 // SMS things

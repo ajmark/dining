@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Dine with DineX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/app.css">
 </head>
 
@@ -13,12 +16,18 @@
 
   <!-- Templates -->
   <script type="text/template" id="tpl-index">
-    <a href="/auth/facebook" rel="nojs">Sign in with facebook</a>
+    <div id="page-index">
+      <img src="/img/dwd-logo.png" width="300" />
+      <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-choose">
-    <a href="/sell">Seller</a>
-    <a href="/buy">Buyer</a>
+    <div id="page-choose">
+      <h1>I want to...</h1>
+      <a class="full-btn choice buy"href="/buy">look for a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
+      <a class="full-btn choice sell" href="/sell">share my funds <br /><small>I am a meallionaire.</small></a>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-sell">
