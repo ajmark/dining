@@ -9,70 +9,34 @@
       '': 'rte_index',
       'choose': 'rte_choose',
       'sell': 'rte_sell',
-      'sell/:id': 'rte_sell_listing',
+      'sell/:id': 'rte_sellListing',
       'buy': 'rte_buy',
-      'buy/:id': 'rte_buy_listing'
+      'buy/:id': 'rte_buyListing'
     },
     rte_index: function() {
-      $('.page').hide();
-      $('#page-index').show();
+      this.currentView = new App.Views.IndexView();
+      $('#content').html(this.currentView.render().el);
     },
     rte_choose: function() {
-      $('.page').hide();
-      $('#page-choose').show();
+      this.currentView = new App.Views.ChooseView();
+      $('#content').html(this.currentView.render().el);
     },
     rte_sell: function() {
-      $('.page').hide();
-      $('#page-sell').show();
+      this.currentView = new App.Views.SellView();
+      $('#content').html(this.currentView.render().el);
     },
-    rte_buy_listing: function(id) {
-      $('.page').hide();
-      $('#page-buychat').show();
+    rte_buy: function(id) {
+      this.currentView = new App.Views.BuyView();
+      $('#content').html(this.currentView.render().el);
+      this.currentView.renderMap();
     },
-    rte_buy: function() {
-      $('.page').hide();
-      $('#page-buy').show();
-
-      var currentLoc = [40.4433,-79.9436];
-      var sellers = [
-          [40,-80],
-          [41,-81],
-          [35,-79],
-          [38,82]
-      ];
-
-      var mapOptions = {
-        center: new google.maps.LatLng(currentLoc[0], currentLoc[1]),
-        zoom: 8
-      };
-      var map = new google.maps.Map(document.getElementById("map-canvas"),
-          mapOptions);
-      var myLatlng = new google.maps.LatLng(currentLoc[0], currentLoc[1]);
-
-      var marker = new google.maps.Marker({
-          position: myLatlng,
-          title:"My Current Location"
-      });
-
-      // To add the marker to the map, call setMap();
-      marker.setMap(map);
-
-      for (var i=0;i<sellers.length;i++)
-      {
-          var sMarker = new google.maps.Marker({
-              position: new google.maps.LatLng(sellers[i][0], sellers[i][1]),
-              title: "A Seller",
-              icon: new google.maps.MarkerImage('http://www.clker.com/cliparts/B/B/1/E/y/r/marker-pin-google-hi.png' , 
-                undefined, undefined, undefined, new google.maps.Size(20, 35)),
-              map:map
-          });
-          sMarker.setMap(map);
-      }
-
+    rte_buyListing: function() {
+      this.currentView = new App.Views.BuyListingView();
+      $('#content').html(this.currentView.render().el);
     }
   });
 
-  app.Router = new Router();
+  App.Router = new Router();
   Backbone.history.start({pushState: true});
   Backbone.history.navigate(Backbone.history.getFragment(), {trigger: true});
 })();
