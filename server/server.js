@@ -9,6 +9,7 @@ var md5 = require('MD5');
 var api_key = 'key-1mj5tl1vgic26dvad2iruu9uun5vmq66';
 var domain = 'sandbox87220.mailgun.org';
 var mailgun = require('mailgun-js')(api_key, domain);
+var PriorityQueue = require('priorityqueuejs');
 
 var passport = require('passport');
 
@@ -205,7 +206,8 @@ app.post("/api/add_listing", function(req, res){
 	var location = req.body.location;
 	var price = req.body.price;
 	var status = req.body.status;
-	var hash = md5(req.body); //doesn't hash timestamp; idk if this is desirable behaviour or not
+	var userId = req.body.user_id; //this should be a real user id (like the one used in our database)
+	var hash = md5(req.body.location + req.body.price + req.body.status + req.body.user_id);
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
@@ -250,6 +252,21 @@ app.get("/api/get_listings", function(req, res){
 	// db.all("SELECT * FROM listing", function(err, rows){
 	// 	res.send(rows);
 	// });
+});
+
+var pq = new PriorityQueue(function (a,b) {
+	return a.price - b.price;
+});
+app.get("/api/get_all_listings_ascending", function(req,res) {
+	db.serialize(function () {
+		db.each("select * from listing", function(err, row) {
+			if(err) {
+				console.log(err);
+			}
+			pq.enq(row);
+		}, function(err, rows) {
+		res.send(pq);
+	})})
 });
 
 // To get chats between 2 people
