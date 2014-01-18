@@ -16,9 +16,10 @@ app.configure(function() {
   app.use(express.static('public'));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: 'such doge very cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(express.static(__dirname + "/client"));
   app.use(app.router);
 });
 
@@ -27,13 +28,6 @@ app.configure(function() {
 ********************************/
 
 var FacebookStrategy = require('passport-facebook').Strategy;
-//blame tim for this; creates fb user entry table
-function createDbTables() {
-    db.run("CREATE TABLE IF NOT EXISTS fbuser\
-            (id INTEGER,\
-            fbid INTEGER)");
-}
-createDbTables();
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -93,10 +87,10 @@ app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']}))
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/success'}),
+    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/choose'}),
     function(req, res) {
         console.log("great success!");
-        res.redirect('/success');
+        res.redirect('/choose');
 });
 
 app.get('/', function(req,res) {
@@ -138,6 +132,9 @@ function createDbTables(){
 			 status TEXT,\
 			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
 			 hash TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS fbuser\
+            (id INTEGER,\
+            fbid INTEGER)");
 }
 
 createDbTables();
@@ -145,7 +142,7 @@ createDbTables();
 app.use(express.json());
 app.use(cors());
 
-app.post("/add_listing", function(req, res){
+app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
 	var location = req.body.location;
 	var price = req.body.price;
@@ -164,7 +161,7 @@ app.post("/add_listing", function(req, res){
 	res.send({"status" : "success", 'hash' : hash});
 });
 
-app.get("/get_listings", function(req, res){
+app.get("/api/get_listings", function(req, res){
 	//lookup by hash, by recency or by ??? (who cares man tim forgot so I forgot too)
 	if(req.query.by == "hash") {
 		var query_string = "select * from listing where hash = \"" + req.query.hash + "\"";
@@ -173,6 +170,20 @@ app.get("/get_listings", function(req, res){
 		db.get(query_string, function(err,rows) {
 			console.log(rows);
 			res.send(rows);
+		});
+	}
+	else if(req.query.by == "recent") {
+		if(!req.query.until) {
+			res.send("fauck u");
+		}
+		var query_string = "select * from listing where time_listed >= (select datetime('now','-" + req.query.until + " hours'))";
+		db.serialize(function() {
+			db.all(query_string, function(err, rows) {
+				if(err) {
+					console.log(err);
+				}
+				res.send(rows);
+			});
 		});
 	}
 	else {
@@ -185,7 +196,7 @@ app.get("/get_listings", function(req, res){
 });
 
 // To get chats between 2 people
-app.get('/get_chats', function(req,res) {
+app.get('/api/get_chats', function(req,res) {
 	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
   + req.query.from + " AND toID = " + req.query.to
   + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
@@ -202,7 +213,7 @@ app.get('/get_chats', function(req,res) {
 });
 
 // To get all chats for debugging purposes
-app.get('/get_all_chats', function(req,res) {
+app.get('/api/get_all_chats', function(req,res) {
   var query_string = "SELECT * FROM chats ";
 
   db.serialize(function() {
@@ -216,7 +227,7 @@ app.get('/get_all_chats', function(req,res) {
 });
 
 // To update chat when a user sends a message
-app.post('/send_message', function(req, res){
+app.post('/api/send_message', function(req, res){
   var query_string = "INSERT INTO chats (fromID, toID, msg) values (" 
     + req.body.from + ", " + req.body.to + ", '" + req.body.msg + "')";
 
@@ -265,11 +276,11 @@ var http = require('http');
 
 // });
 
-/** given coordinates, returns 30 nearby venues*/
-app.get('/get_coords', function(req,res) {
+/** given coordinates, returns 30 nearby venues */
+app.get('/api/get_coords', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
-			req.query.lon + "," + req.query.lat + 
+			req.query.lat + "," + req.query.lon + 
 			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101",
 	  	method: "GET",
 	  	timeout: 10000,
@@ -283,10 +294,10 @@ app.get('/get_coords', function(req,res) {
 });
 
 /** adds a search term to the venues queries */
-app.get('/refine_search', function(req,res) {
+app.get('/api/refine_search', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
-			req.query.lon + "," + req.query.lat + 
+			req.query.lat + "," + req.query.lon + 
 			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101"
 			+ "&query=" + req.query.term,
 	  	method: "GET",
@@ -300,6 +311,7 @@ app.get('/refine_search', function(req,res) {
 	});
 });
 
+/** helper function for finding venues */
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
 	var venues = searchObj.response.venues;
@@ -311,7 +323,6 @@ function venueInformation (error, response, body) {
 		console.log("Long: " + venues[index].location.lng);
   	}
 }
-
 
 // SMS things
 app.get('/match_made_SMS', function (req,res) {
@@ -342,6 +353,10 @@ app.get('/match_made_email', function (req,res) {
   mailgun.messages.send(data, function (error, response, body) {
     console.log(body);
   });
+
+app.get("/*", function(req, res){
+    res.sendfile("client/index.html");
+    
 });
 
 app.listen(3000);
