@@ -283,9 +283,6 @@ function venueInformation (error, response, body) {
   	}
 }
 
-app.get('/hello', function(req, res){
-	res.send(req.session);
- 	// res.send('hello world');
 app.get('/hi', function (req,res) {
 	request({
 		uri: "http://textbelt.com/text",
