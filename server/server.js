@@ -22,9 +22,13 @@ createDbTables();
 
 // To get chats between 2 people
 app.get('/get_chats', function(req,res) {
-	var query_string = "select * from chats where (fromID = " 
+  console.log(req.query.lastID);
+	var query_string = "select * from chats where ((fromID = " 
   + req.query.from + " and toID = " + req.query.to
-  + ") or (fromID = " + req.query.to + " and toID = " + req.query.from + ")";
+  + ") or (fromID = " + req.query.to + " and toID = " + req.query.from + "))"
+  + " and (id>" + req.query.lastID + ")";
+
+  var query_string2 = "select * from chats";
 
 	db.serialize(function() {
 		db.all(query_string, function(err, rows) {
