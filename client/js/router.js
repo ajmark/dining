@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  window.app = window.app || {collections: {}, models: {}, views: {}};
+  window.App = window.App || {Collections: {}, Models: {}, Views: {}};
 
   // Router
   // ----------
@@ -32,6 +32,7 @@
     rte_buy: function() {
       $('.page').hide();
       $('#page-buy').show();
+
       var currentLoc = [40.4433,-79.9436];
       var sellers = [
           [40,-80],
@@ -67,10 +68,11 @@
           });
           sMarker.setMap(map);
       }
+
     }
   });
 
   app.Router = new Router();
   Backbone.history.start({pushState: true});
-  Backbone.history.navigate('/', {trigger: true});
+  Backbone.history.navigate(Backbone.history.getFragment(), {trigger: true});
 })();
