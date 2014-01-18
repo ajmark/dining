@@ -41,7 +41,7 @@ app.post("/add_listing", function(req, res){
 	var price = req.body.price;
 	var status = req.body.status;
 	var userId = req.body.user_id;
-	var hash = "ABCD";
+	var hash = md5(req.body); //doesn't hash timestamp; idk if this is desirable behaviour or not
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
@@ -51,13 +51,27 @@ app.post("/add_listing", function(req, res){
 				$status : status,
 				$hash : hash
 			});
-	res.send({"status" : "success"});
+	res.send({"status" : "success", 'hash' : hash});
 });
 
 app.get("/get_listings", function(req, res){
-	db.all("SELECT * FROM listing", function(err, rows){
-		res.send(rows);
-	});
+	//lookup by hash, by recency or by ??? (who cares man tim forgot so I forgot too)
+	if(req.query.by == "hash") {
+		var query_string = "select * from listing where hash = \"" + req.query.hash + "\"";
+		console.log(query_string);
+		// db.get("select * from listing where hash = \"$hash\"", {$hash: req.query.hash});
+		db.get(query_string, function(err,rows) {
+			console.log(rows);
+			res.send(rows);
+		});
+	}
+	else {
+		console.log("i don't know how to handle this");
+		res.send(null);
+	}
+	// db.all("SELECT * FROM listing", function(err, rows){
+	// 	res.send(rows);
+	// });
 });
 
 // To get chats between 2 people
