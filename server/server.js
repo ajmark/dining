@@ -7,6 +7,20 @@ var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database(file);
 var app = express();
 
+
+var http = require('http');
+app.get('/get_coords', function(req,res) {
+
+	var lon = req.query.lon
+	var lat = req.query.lat
+
+	var options = {
+  		host: 'api.foursquare.com',
+  		path: 'v2/venues/search?ll=' + lon + "," + lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
+	}
+});
+
+
 var chatlogs = sql.define({
 	name: 'chats',
 	columns: [from, to, msg, time]
