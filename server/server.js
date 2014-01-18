@@ -7,26 +7,13 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 
-// var chatlogs = sql.define({
-// 	name: 'chats',
-// 	columns: ['fromID', 'toID', 'msg', 'time']
-// });
-
+// To get chats between 2 people
 app.get('/get_chats', function(req,res) {
-	// var bad_query_string = chatlogs
-	// 					.select(chatlogs.msg, chatlogs.time)
-	// 					.from(chatlogs)
-	// 					.where(chatlogs.fromID.equals(req.query.from))
-	// 					.toQuery();
-	// console.log(bad_query_string.text);
-	// var query = db.prepare("select * from chats where fromID = 1");
-	var query_string = "select * from chats where fromID = " + req.query.from;
+	var query_string = "select * from chats where (fromID = " 
+  + req.query.from + " and toID = " + req.query.to
+  + ") or (fromID = " + req.query.to + " and toID = " + req.query.from + ")";
 
 	db.serialize(function() {
-		// if(!exists) {
-		// 	db.run("create table chats (fromID NUMERIC, toID NUMERIC, msg TEXT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)");
-		// }
-
 		db.all(query_string, function(err, rows) {
 			if(err) {
 				console.log(err);
