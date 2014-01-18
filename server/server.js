@@ -4,6 +4,12 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 
+
+create table chats (fromID NUMERIC, toID NUMERIC, msg TEXT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL);
+INSERT INTO chats (fromID, toID, msg) values (1,2,"hi there");
+INSERT INTO chats (fromID, toID, msg) values (2,1,"hello there");
+INSERT INTO chats (fromID, toID, msg) values (2,2,"I'm talking to myself wow");
+
 // To get chats between 2 people
 app.get('/get_chats', function(req,res) {
 	var query_string = "select * from chats where (fromID = " 
