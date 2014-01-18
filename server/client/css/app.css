@@ -1,0 +1,56 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  color: #F9F9F9;
+}
+
+#content {
+  background-color: #52BD52;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+/* ===========================
+	INDEX SCREEN
+============================== */
+
+#page-index .signin-btn {
+	text-decoration: none;
+	text-transform: lowercase;
+	background-color: rgba(50,50,50,0.1);
+	padding: 20px;
+	width: 300px;
+	height: 30px;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 50%;
+	bottom: 0;
+	font-size: 30px;
+	text-align: center;
+	border-radius: 5px;
+}
+
+/* ===========================
+	CHOOSE SCREEN
+============================== */
+#page-choose h1 {
+	text-align: center;
+}
+
+#page-choose choice {
+
+}
+
+#page-choice buy {
+
+}
+
+#page-choice sell {
+
+}

@@ -74,7 +74,8 @@ passport.use(new FacebookStrategy({
                 }
             })
         });
-        return done(null, profile.displayName);
+		profile.accessToken = accessToken;
+        return done(null, profile);
         })
     );
 
@@ -88,7 +89,7 @@ app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']}))
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/choose'}),
+    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/success'}),
     function(req, res) {
         console.log("great success!");
         res.redirect('/choose');
@@ -99,9 +100,12 @@ app.get('/', function(req,res) {
 });
 
 app.get('/success', function(req,res) {
-	req.session.test = "hello";
-    res.send("you're logged in with facebook!");
-
+	console.log(req.user);
+	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
+		req.session.userId = row.id;
+	});
+	res.redirect("/choose");
+    // res.send("you're logged in with facebook!");
 });
 
 app.get('/fail', function(req,res) {
@@ -140,8 +144,7 @@ function createDbTables(){
 
 createDbTables();
 
-app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
 app.post("/api/add_listing", function(req, res){
 	//insert did not work properly, life is hard
@@ -175,7 +178,7 @@ app.post("/api/add_listing", function(req, res){
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
 			VALUES ($userId, $location, $price, $status, $hash)", 
 			{
-				$userId : userId,
+				$userId : req.session.userId,
 				$location : location,
 				$price : price,
 				$status : status,
@@ -353,6 +356,7 @@ app.get('/api/refine_search', function(req,res) {
 	});
 });
 
+
 /** helper function for finding venues */
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
@@ -364,11 +368,13 @@ function venueInformation (error, response, body) {
       name: venues[i].name,
       id: venues[i].id,
       dist: venues[i].location.dist,
-      hereNow: venues[i].hereNow.count
+      hereNow: venues[i].hereNow.count,
+      checkCount: venues[i].stats.checkinsCount
     });
   }
 
-  return result;
+  return result.sort(function(a,b){return b.checkCount - a.checkCount});
+  //return venues;
 }
 
 // SMS things
