@@ -319,7 +319,7 @@ app.get('/api/refine_search', function(req,res) {
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
 	var venues = searchObj.response.venues;
-  var result = [];
+  	var result = [];
 
 	for (i in venues) {
     result.push({
