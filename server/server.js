@@ -188,7 +188,7 @@ function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS listing\
 			(user_id INTEGER PRIMARY KEY,\
 			 location TEXT,\
-			 price TEXT,\
+			 price REAL,\
 			 status TEXT,\
 			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
 			 hash TEXT)");
@@ -254,12 +254,12 @@ app.get("/api/get_listings", function(req, res){
 	// });
 });
 
-var pq = new PriorityQueue(function (a,b) {
-	return a.price - b.price;
-});
 app.get("/api/get_all_listings_ascending", function(req,res) {
+	var pq = new PriorityQueue(function (a,b) {
+		return a.price - b.price;
+	});
 	db.serialize(function () {
-		db.each("select * from listing", function(err, row) {
+		db.each("select * from listing join fbuser on listing.id = fbuser.id", function(err, row) {
 			if(err) {
 				console.log(err);
 			}
@@ -359,14 +359,14 @@ app.get('/api/refine_search', function(req,res) {
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
 	var venues = searchObj.response.venues;
-  	var result = [];
+  var result = [];
 
 	for (i in venues) {
     result.push({
       name: venues[i].name,
       id: venues[i].id,
       dist: venues[i].location.dist,
-      hereNow: venues[i].hereNow.count,
+      addr: venues[i].location.address,
       checkCount: venues[i].stats.checkinsCount
     });
   }

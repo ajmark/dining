@@ -37,6 +37,4 @@
   });
 
   App.Router = new Router();
-  Backbone.history.start({pushState: true});
-  Backbone.history.navigate(Backbone.history.getFragment(), {trigger: true});
 })();
