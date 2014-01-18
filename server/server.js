@@ -103,7 +103,7 @@ app.get('/success', function(req,res) {
 	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
 		req.session.userId = row.id;
 	});
-	res.send(req.user);
+	res.redirect("/choose");
     // res.send("you're logged in with facebook!");
 });
 
