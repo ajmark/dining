@@ -5,7 +5,9 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 var request = require("request");
+var md5 = require('MD5');
 
+/* noob tim creating SQL tables */
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
 			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
