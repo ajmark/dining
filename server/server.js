@@ -4,6 +4,22 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 
+function createDbTables(){
+	db.run("CREATE TABLE IF NOT EXISTS user\
+			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
+			 name TEXT,\
+			 email TEXT,\
+			 phone INTEGER)");
+	db.run("CREATE TABLE IF NOT EXISTS chats\
+			(id INTEGER PRIMARY KEY AUTOINCREMENT,\
+			fromID INTEGER,\
+			toID INTEGER,\
+			msg TEXT,\
+			time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)");
+}
+
+createDbTables();
+
 // To get chats between 2 people
 app.get('/get_chats', function(req,res) {
 	var query_string = "select * from chats where (fromID = " 
