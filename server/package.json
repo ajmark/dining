@@ -9,6 +9,6 @@
     "express": "3.3.5",
     "cors": "latest",
     "sqlite3": "latest",
-    "passport": "latest"
+    "passport-facebook": "latest"
   }
 }
