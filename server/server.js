@@ -12,6 +12,8 @@ var mailgun = require('mailgun-js')(api_key, domain);
 
 var passport = require('passport');
 
+var http = require('http');
+
 app.configure(function() {
   app.use(express.static('public'));
   app.use(express.cookieParser());
@@ -103,6 +105,7 @@ app.get('/success', function(req,res) {
 	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
 		req.session.userId = row.id;
 	});
+	req.session.accessToken = req.user.accessToken;
 	res.send(req.user);
     // res.send("you're logged in with facebook!");
 });
@@ -115,6 +118,38 @@ app.get('/fail', function(req,res) {
 /******************************
 ******** end fb login *********
 ******************************/
+
+/** get facebook friends */
+
+app.get('/get_friends', function(req,res) {
+	var options = {
+        host: 'graph.facebook.com',
+        port: 443,
+        path: '/me/friends' + '?access_token=' + req.user.accessToken,
+        method: 'GET'
+    };
+
+    var buffer = ''; //this buffer will be populated with the chunks of the data received from facebook
+    var request = https.get(options, function(result){
+        result.setEncoding('utf8');
+        result.on('data', function(chunk){
+            buffer += chunk;
+        });
+
+        result.on('end', function(){
+            callback(buffer);
+        });
+    });
+
+    request.on('error', function(e){
+        console.log('error from facebook.getFbData: ' + e.message)
+    });
+
+    console.log("hello");
+
+    request.end();
+});
+
 
 /* noob tim creating SQL tables */
 function createDbTables(){
@@ -243,41 +278,6 @@ app.post('/api/send_message', function(req, res){
   });
 });
 
-var http = require('http');
-// app.get('/get_coords', function(req,res) {
-// 	console.log(req.query.lon);
-// 	console.log(req.query.lat);
-
-// 	var options = {
-// //  		host: 'api.foursquare.com',
-//   //		path: '/v2/venues/search?ll=' + 
-//   		host: "dinewithdinex.com:3000",
-//   		path: "/"
-// //  		req.query.lon + "," + req.query.lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
-// 	};
-
-// callback = function(response) {
-//   var str = '';
-
-//   //another chunk of data has been recieved, so append it to `str`
-//   response.on('data', function (chunk) {
-//     str += chunk;
-//   });
-
-//   //the whole response has been recieved, so we just print it out here
-//   response.on('end', function () {
-//   	res.send("something below");
-//     res.send(str);
-//     res.send('hello');
-//     console.log(str);
-//     console.log("printed above");
-//   //  JSON.parse(str);
-//   });
-// }
-
-// http.request(options, callback).end();
-
-// });
 
 /** given coordinates, returns 30 nearby venues */
 app.get('/api/get_coords', function(req,res) {
