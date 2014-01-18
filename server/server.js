@@ -32,7 +32,6 @@ app.get('/get_coords', function(req,res) {
 	};
 });
 
-
 // app.get('/get_chats', function(req,res) {
 // 	var query_string = "select * from chats where fromID = " + req.query.from;
 
