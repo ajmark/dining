@@ -9,16 +9,19 @@
 
 <body>
 
-  <div id="page-index" class="page">
+  <section id="content"></section>
+
+  <!-- Templates -->
+  <script type="text/template" id="tpl-index">
     <button>Sign in with facebook</button>
-  </div>
+  </script>
 
-  <div id="page-choose" class="page">
-    <button>Seller</button>
-    <button>Buyer</button>
-  </div>
+  <script type="text/template" id="tpl-choose">
+    <a href="/sell">Seller</a>
+    <a href="/buy">Buyer</a>
+  </script>
 
-  <div id="page-sell" class="page">
+  <script type="text/template" id="tpl-sell">
     <form action="http://whothehellknows:8000/check-post" method="post">
       Where are you? Foursquare stuff 
       <input type="text" name="location"><br>
@@ -34,15 +37,15 @@
       <input type="text" name="message"><br>
       <input type="submit">
     </form>
-  </div>
+  </script>
 
-  <div id="page-buy" class="page">
+  <script type="text/template" id="tpl-buy">
     <div id="map-canvas"></div>
-  </div>
+  </script>
 
-  <div id="page-buychat" class="page">
-    <h1>Chat with SELLER NAME HERE</h1>
-    <h3>Current Amount Owed: AMT OWED HERE </h3>
+  <script type="text/template" id="tpl-buyListing">
+    <h1>Chat with <%= seller_name %></h1>
+    <h3>Current Amount Owed: <%= amt %></h3>
     <button type ="button" id="cash">CASH</button>
     <button type ="button" id="venmo">VENMO</button>
     <br> previous messages
@@ -50,19 +53,19 @@
       <input type="text" name="message">
       <input type="submit" name="send">
     </form>
-  </div>
-
-
-
-  <!-- Templates -->
-  <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW3pwvWQ4GAD2kVSnQIAZSzg8oONQtHJs&sensor=true">
   </script>
 
-  <script src="js/lib/jquery-1.10.2.min.js"></script>
-  <script src="js/lib/underscore-min.js"></script>
-  <script src="js/lib/backbone-min.js"></script>
-  <script src="js/router.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Javascript -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW3pwvWQ4GAD2kVSnQIAZSzg8oONQtHJs&sensor=true"></script>
+  <script src="/js/lib/jquery-1.10.2.min.js"></script>
+  <script src="/js/lib/underscore-min.js"></script>
+  <script src="/js/lib/backbone-min.js"></script>
+  <script src="/js/views/IndexView.js"></script>
+  <script src="/js/views/ChooseView.js"></script>
+  <script src="/js/views/BuyListingView.js"></script>
+  <script src="/js/views/BuyView.js"></script>
+  <script src="/js/views/SellView.js"></script>
+  <script src="/js/Router.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
