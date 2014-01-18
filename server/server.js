@@ -364,6 +364,12 @@ app.get('/match_made_email', function (req,res) {
   });
 });
 
+// Venmo API
+/* 
+app.get('/venmo_payment', function (req, res) {
+  'https://venmo.com/?txn=pay&recipients=username&amount=amount&note=note&audience=private'
+})*/
+
 app.get("/*", function(req, res){
     res.sendfile("client/index.html");
     
