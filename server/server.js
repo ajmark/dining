@@ -35,19 +35,18 @@ var options = {
             }
 
 
+// app.get('/get_chats', function(req,res) {
+// 	var query_string = "select * from chats where fromID = " + req.query.from;
 
-app.get('/get_chats', function(req,res) {
-	var query_string = "select * from chats where fromID = " + req.query.from;
-
-	db.serialize(function() {
-		db.all(query_string, function(err, rows) {
-			if(err) {
-				console.log(err);
-			}
-			res.send(rows);
-		});
-	});
-});
+// 	db.serialize(function() {
+// 		db.all(query_string, function(err, rows) {
+// 			if(err) {
+// 				console.log(err);
+// 			}
+// 			res.send(rows);
+// 		});
+// 	});
+// });
 
 app.get('/', function(req, res){
   res.send('hello world');
@@ -56,3 +55,4 @@ app.get('/', function(req, res){
 app.listen(3000);
 var proxyServer = httpProxy.createServer(options);
 proxyServer.listen(80);
+
