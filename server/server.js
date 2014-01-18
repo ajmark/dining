@@ -262,11 +262,11 @@ var http = require('http');
 
 // });
 
-/** given coordinates, returns 30 nearby venues*/
+/** given coordinates, returns 30 nearby venues */
 app.get('/get_coords', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
-			req.query.lon + "," + req.query.lat + 
+			req.query.lat + "," + req.query.lon + 
 			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101",
 	  	method: "GET",
 	  	timeout: 10000,
@@ -283,7 +283,7 @@ app.get('/get_coords', function(req,res) {
 app.get('/refine_search', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
-			req.query.lon + "," + req.query.lat + 
+			req.query.lat + "," + req.query.lon + 
 			"&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101"
 			+ "&query=" + req.query.term,
 	  	method: "GET",
@@ -297,6 +297,7 @@ app.get('/refine_search', function(req,res) {
 	});
 });
 
+/** helper function for finding venues */
 function venueInformation (error, response, body) {
 	var searchObj = JSON.parse(body);
 	var venues = searchObj.response.venues;
@@ -308,7 +309,6 @@ function venueInformation (error, response, body) {
 		console.log("Long: " + venues[index].location.lng);
   	}
 }
-
 
 // SMS things
 app.get('/match_made', function (req,res) {
