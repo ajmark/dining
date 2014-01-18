@@ -12,6 +12,7 @@
     "sql": "latest",
     "passport": "latest",
     "passport-facebook": "latest",
-    "http-proxy": "latest"
+    "http-proxy": "latest",
+    "request" : "latest"
   }
 }
