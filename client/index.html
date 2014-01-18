@@ -1,10 +1,12 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Dine with DineX</title>
   <link rel="stylesheet" href="css/app.css">
 </head>
+
 <body>
 
   <div id="page-index" class="page">
@@ -35,7 +37,19 @@
   </div>
 
   <div id="page-buy" class="page">
-    <div id="map-canvas"/>
+    <div id="map-canvas"></div>
+  </div>
+
+  <div id="page-buychat" class="page">
+    <h1>Chat with SELLER NAME HERE</h1>
+    <h3>Current Amount Owed: AMT OWED HERE </h3>
+    <button type ="button" id="cash">CASH</button>
+    <button type ="button" id="venmo">VENMO</button>
+    <br> previous messages
+    <form action="what" method="post">
+      <input type="text" name="message">
+      <input type="submit" name="send">
+    </form>
   </div>
 
 
