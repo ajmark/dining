@@ -4,9 +4,9 @@ var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new FacebookStrategy({
-    clientID: 568439769914767,
-    clientSecret: ee31e9901829fc3f77867c0767417679,
-    callbackURL: "http://thatsdeepman.heroku.com/auth/facebook/callback"
+    clientID: 676552805730069,
+    clientSecret: 5c8d7826b50a1474c42d9d46ce30a4fd,
+    callbackURL: "http://www.dinewithdinex.com/"
   },
   function(accessToken, refreshToken, profile, done) {
     //check user table for anyone with a facebook ID of profile.id
