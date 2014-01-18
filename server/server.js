@@ -11,6 +11,14 @@ app.get('/get_chats', function(req,res) {
   + ") or (fromID = " + req.query.to + " and toID = " + req.query.from + ")";
 
 	db.serialize(function() {
+    db.all(query_string, function(err, rows) {
+        if(err) {
+          console.log(err);
+        }
+        res.send(rows);
+    });
+  });
+});
 
 var http = require('http');
 app.get('/get_coords', function(req,res) {
@@ -23,16 +31,6 @@ app.get('/get_coords', function(req,res) {
   		path: 'v2/venues/search?ll=' + lon + "," + lat + '&client_id=YRIG5YIRMQIGEORGCNXDXCNDDTKHI2JZFGMTFQEKAWWOXWLD&client_secret=ILBQTJZYO2X11GUSOKXEHXDDOO2YXUPYQOZVRI2MHK0VMOQ5&v=20140101'
 	};
 });
-
-var httpProxy = require("http-proxy");
-var options = {
-                hostnameOnly : true,
-                router: {
-                            "www.dinewithdinex.com" : "127.0.0.1:8000",
-                            "dinewithdinex.com" : "127.0.0.1:8000",
-                            "api.dinewithdinex.com" : "127.0.0.1:3000"
-                }
-            }
 
 
 // app.get('/get_chats', function(req,res) {
@@ -53,6 +51,4 @@ app.get('/', function(req, res){
 });
 
 app.listen(3000);
-var proxyServer = httpProxy.createServer(options);
-proxyServer.listen(80);
 
