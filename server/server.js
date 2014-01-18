@@ -5,7 +5,10 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var app = express();
 var request = require('request');
-// var md5 = require('MD5');
+var md5 = require('MD5');
+var api_key = 'key-1mj5tl1vgic26dvad2iruu9uun5vmq66';
+var domain = 'sandbox87220.mailgun.org';
+var mailgun = require('mailgun-js')(api_key, domain);
 
 var passport = require('passport');
 
@@ -311,7 +314,7 @@ function venueInformation (error, response, body) {
 
 
 // SMS things
-app.get('/match_made', function (req,res) {
+app.get('/match_made_SMS', function (req,res) {
   request.post(
     'http://textbelt.com/text',
     {
@@ -323,6 +326,22 @@ app.get('/match_made', function (req,res) {
 		console.log("something");
 	});
   // console.log(res);
+});
+
+// Email things
+app.get('/match_made_email', function (req,res) {
+  var data = {
+  from: 'Me <no_reply@dinewithdinex.com>',
+  to: req.query.email,
+  // maybe can include bcc in the future but we are too lazy now
+  subject: 'Found a match!',
+  text: 'A match has been found for you!!! \
+        Visit the app to find out who you\'re matched with! :)'
+  };
+
+  mailgun.messages.send(data, function (error, response, body) {
+    console.log(body);
+  });
 });
 
 app.listen(3000);
