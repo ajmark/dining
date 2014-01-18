@@ -73,7 +73,8 @@ passport.use(new FacebookStrategy({
                 }
             })
         });
-        return done(null, profile.displayName);
+		profile.accessToken = accessToken;
+        return done(null, profile);
         })
     );
 
@@ -87,7 +88,7 @@ app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']}))
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/choose'}),
+    passport.authenticate('facebook', {failureRedirect: '/fail', successRedirect: '/success'}),
     function(req, res) {
         console.log("great success!");
         res.redirect('/choose');
@@ -98,9 +99,12 @@ app.get('/', function(req,res) {
 });
 
 app.get('/success', function(req,res) {
-	req.session.test = "hello";
-    res.send("you're logged in with facebook!");
-
+	console.log(req.user);
+	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
+		req.session.userId = row.id;
+	});
+	res.send(req.user);
+    // res.send("you're logged in with facebook!");
 });
 
 app.get('/fail', function(req,res) {
