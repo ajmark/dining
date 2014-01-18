@@ -38,6 +38,35 @@ body {
 }
 
 /* ===========================
+  Venue chooser
+============================== */
+.venue-chooser.dark {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 100;
+  top: 0;
+  left: 0;
+}
+.venue-chooser .venues {
+  width: 80%;
+  background: #FFF;
+  height: 100%;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  overflow-y: scroll; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
+}
+.venue-chooser div ul li a {
+  padding: 20px;
+  display: block;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* ===========================
 	INDEX SCREEN
 ============================== */
 

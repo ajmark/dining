@@ -15,6 +15,12 @@
 
   <section id="content"></section>
 
+  <div class="venue-chooser dark">
+    <div class="venues">
+
+    </div>
+  </div>
+
   <!-- Templates -->
   <script type="text/template" id="tpl-index">
     <div id="page-index">
@@ -79,17 +85,24 @@
     </form>
   </script>
 
+  <script type="text/template" id="tpl-venueChooser">
+    <%= venues %>
+  </script>
+
   <!-- Javascript -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW3pwvWQ4GAD2kVSnQIAZSzg8oONQtHJs&sensor=true"></script>
   <script src="/js/lib/jquery-1.10.2.min.js"></script>
   <script src="/js/lib/underscore-min.js"></script>
   <script src="/js/lib/backbone-min.js"></script>
+
+  <script src="/js/router.js"></script>
+  <script src="/js/models/VenueModel.js"></script>
   <script src="/js/views/IndexView.js"></script>
   <script src="/js/views/ChooseView.js"></script>
   <script src="/js/views/BuyListingView.js"></script>
   <script src="/js/views/BuyView.js"></script>
   <script src="/js/views/SellView.js"></script>
-  <script src="/js/Router.js"></script>
+  
   <script src="/js/app.js"></script>
 </body>
 </html>
