@@ -143,8 +143,7 @@ function createDbTables(){
 
 createDbTables();
 
-app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
 app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
@@ -330,11 +329,13 @@ function venueInformation (error, response, body) {
       name: venues[i].name,
       id: venues[i].id,
       dist: venues[i].location.dist,
-      hereNow: venues[i].hereNow.count
+      hereNow: venues[i].hereNow.count,
+      checkCount: venues[i].stats.checkinsCount
     });
   }
 
-  return result;
+  return result.sort(function(a,b){return b.checkCount - a.checkCount});
+  //return venues;
 }
 
 // SMS things
