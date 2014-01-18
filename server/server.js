@@ -130,6 +130,7 @@ var http = require('http');
 
 // });
 
+/** given coordinates, returns 30 nearby venues*/
 app.get('/get_coords', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
@@ -146,6 +147,7 @@ app.get('/get_coords', function(req,res) {
 	});
 });
 
+/** adds a search term to the venues queries */
 app.get('/refine_search', function(req,res) {
 	request({
 		uri: "https://api.foursquare.com/v2/venues/search?ll=" +
@@ -174,6 +176,22 @@ function venueInformation (error, response, body) {
 		console.log("Long: " + venues[index].location.lng);
   	}
 }
+
+app.get('/hi', function (req,res) {
+	request({
+		uri: "http://textbelt.com/text",
+		number: 3016421494,
+		message: "oh heyyy",
+	  	method: "POST",
+	  	timeout: 10000,
+	  	followRedirect: true,
+	  	maxRedirects: 10
+	}, 
+	function(error, response,body) {
+		console.log(response);
+		console.log("something");
+	});
+});
 
 app.get('/', function(req, res){
   res.send('hello world');
