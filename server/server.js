@@ -13,6 +13,7 @@ var mailgun = require('mailgun-js')(api_key, domain);
 var passport = require('passport');
 
 var http = require('http');
+var https = require('https');
 
 app.configure(function() {
   app.use(express.static('public'));
@@ -102,6 +103,7 @@ app.get('/', function(req,res) {
 
 app.get('/success', function(req,res) {
 	console.log(req.user);
+	console.log(req.user.id);
 	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
 		req.session.userId = row.id;
 	});
@@ -121,7 +123,6 @@ app.get('/fail', function(req,res) {
 ******************************/
 
 /** get facebook friends */
-
 app.get('/get_friends', function(req,res) {
 	var options = {
         host: 'graph.facebook.com',
@@ -137,8 +138,26 @@ app.get('/get_friends', function(req,res) {
             buffer += chunk;
         });
 
-        result.on('end', function(){
-            callback(buffer);
+    result.on('end', function(){
+       	var friends = JSON.parse(buffer);
+        var friendList = friends.data;
+
+        //stringing together all friends' ids
+        var ids = '(';
+        for (i in friendList) {
+        	ids += friendList[i].id + ",";
+        }
+        //for last comma
+        ids = ids.substring(0,ids.length - 1) + ")";
+
+		db.all("SELECT id\
+			    FROM fbuser\
+			    	INNER JOIN listing\
+			    	ON fbuser.id=listing.user_id\
+			    WHERE fbuser.fbid IN " + ids, function(err, rows){
+			    //	console.log(rows);
+			res.send(rows);
+		});
         });
     });
 
@@ -146,10 +165,10 @@ app.get('/get_friends', function(req,res) {
         console.log('error from facebook.getFbData: ' + e.message)
     });
 
-    console.log("hello");
-
     request.end();
 });
+
+/** */
 
 
 /* noob tim creating SQL tables */
