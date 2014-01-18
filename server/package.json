@@ -14,6 +14,7 @@
     "passport-facebook": "latest",
     "http-proxy": "latest",
     "MD5": "~1.2.0",
-    "request" : "latest"
+    "request" : "latest",
+    "mailgun-js" : "latest"
   }
 }
