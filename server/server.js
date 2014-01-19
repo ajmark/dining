@@ -74,13 +74,19 @@ passport.use(new FacebookStrategy({
                                 values ("+ rows['last_insert_rowid()'] + "," + profile.id + ")";
                         // console.log(qs);
                         db.run(qs);
+                        profile.userId = rows.id;
+		                profile.accessToken = accessToken;
+		        		return done(null, profile);
                     });
                 }
-            })
+                else{
+                	profile.userId = rows.id;
+	                profile.accessToken = accessToken;
+	        		return done(null, profile);	
+                }
+            });
         });
-		profile.accessToken = accessToken;
-        return done(null, profile);
-        })
+		        })
     );
 
 // Redirect the user to Facebook for authentication.  When complete,
@@ -104,13 +110,12 @@ app.get('/', function(req,res) {
 });
 
 app.get('/success', function(req,res) {
-	console.log(req.user);
-	console.log(req.user.id);
-	db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
-		req.session.userId = row.id;
-	});
+	// db.get("SELECT id FROM fbuser WHERE fbid=" + req.user.id, function(err, row){
+	// 	req.session.userId = row.id;
+	// 	console.log(req.session.userId);
+	// });
 	req.session.accessToken = req.user.accessToken;
-	res.send(req.user);
+	req.session.userId = req.user.userId;
 	res.redirect("/choose");
     // res.send("you're logged in with facebook!");
 });
@@ -332,7 +337,9 @@ app.get("/api/get_listings", function(req, res){
 app.get("/api/get_chats", function(req, res){
 	var hash = req.query.hash;
 	var userId = req.session.userId;
-	db.all("SELECT *\
+	console.log("GET chat");
+	console.log(req.session.userId);
+	db.all("SELECT chats.fromID, chats.toID, chats.msg\
 			FROM listing\
 				INNER JOIN chats\
 				ON (chats.fromID = listing.user_id\
@@ -373,16 +380,39 @@ app.get('/api/get_all_chats', function(req,res) {
 
 // To update chat when a user sends a message
 app.post('/api/send_message', function(req, res){
-  var query_string = "INSERT INTO chats (fromID, toID, msg) values (" 
-    + req.body.from + ", " + req.body.to + ", '" + req.body.msg + "')";
-
-  db.serialize(function(){
-    db.all(query_string, function(err, rows) {
-      if (err){
-      }
-      res.send(rows);
-    });
-  });
+	var hash = req.body.hash;
+	console.log(req.session);
+	var userId = req.session.userId;
+	var msg = req.body.msg;
+	console.log(userId);
+	db.get("SELECT user_id, buyer_id\
+			FROM listing\
+			WHERE hash = $hash\
+			AND (user_id = $userId\
+				 OR buyer_id = $userId)",
+			{
+				$hash : hash,
+				$userId : userId
+			}, function(err, row){
+				console.log(row);
+				var otherId;
+				if (row === undefined){
+					res.send({"status" : "fail"});
+				}
+				else if (userId === row.user_id){
+					otherId = row.buyer_id;
+				}
+				else if(userId === row.buyer_id){
+					otherId = row.user_id;
+				}
+				db.run("INSERT INTO chats (fromID, toID, msg)\
+						VALUES ($userId, $otherId, $msg)",
+						{
+							$userId : userId,
+							$otherId : otherId,
+							$msg : msg
+						});
+			});
 });
 
 

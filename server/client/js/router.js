@@ -11,7 +11,8 @@
       'sell': 'rte_sell',
       'sell/:id': 'rte_sellListing',
       'buy': 'rte_buy',
-      'buy/:id': 'rte_buyListing'
+      'buy/:id': 'rte_buyListing',
+      'chat': 'rte_chat'
     },
     rte_index: function() {
       $('.page').hide();
@@ -32,6 +33,10 @@
     rte_buyListing: function(id) {
       $('.page').hide();
       $('#page-buyListing').show();
+    },
+    rte_chat: function(){
+      $('.page').hide();
+      $("#page-chat").show();
     }
   });
 

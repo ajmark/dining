@@ -176,3 +176,24 @@ body {
 #page-sell .blockDinexSelect.selected{
   background-color: green;
 }
+
+/* ===========================
+  CHAT SCREEN
+============================== */
+#page-chat #chatArea{
+  height: 600px;
+}
+#page-chat .input-field {
+  background-color: #F0F0F0;
+  color: #505050;
+  padding: 0 20px;
+  height: 60px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #B6D9B7;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  line-height: 3em;
+  border-radius: 0;
+}
