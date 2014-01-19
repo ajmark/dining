@@ -223,7 +223,7 @@ app.post("/api/add_phone", function(req,res) {
 		res.send("fauck u");
 	}
 	db.run("UPDATE user\
-		    SET phone = $phone
+		    SET phone = $phone\
 		    WHERE id = $id",
 		    {
 		    	$phone : req.body.phone,
