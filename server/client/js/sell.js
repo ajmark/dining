@@ -12,12 +12,21 @@ $(window).load(function(){
 	            a.data("lng", data[i].lng);
 	            ul.append($('<li>').append(a));
 	          }
-
 	          $('.venues').append(ul);
 	          
 	        });
 	        $(".venue-chooser").fadeIn();
 	      });
+	});
+
+	$('#eatwith').click(function() {
+		if ($(this).find('input').prop('checked')) {
+			$(this).find('input').prop('checked', false);
+			$(this).removeClass('checked');
+		} else {
+			$(this).find('input').prop('checked', true);
+			$(this).addClass('checked');
+		}
 	});
 
 	$(document).click(function (e){

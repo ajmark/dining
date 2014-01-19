@@ -151,9 +151,17 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   padding: 10px;
 }
+#page-sell .type-choice a.selected {
+  border: 2px solid #808080;
+}
 
 #page-sell .eat-with {
   display: none;
+}
+#eatwith.checked {
+  background-image: url(/img/check.png);
+  background-repeat: no-repeat;
+  background-position: 95% center;
 }
 
 #page-sell textarea.input-field {
