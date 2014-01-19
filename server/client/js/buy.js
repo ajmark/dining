@@ -25,7 +25,7 @@
       success: function(results) {
       	console.log(results);
         dataArray = results;
-        bindData(results[currItem]);
+        //bindData(results[currItem]);
       }
     });
   });
@@ -37,6 +37,8 @@
   });
 
   $('#page-buy .yes').click(function() {
-    Backbone.history.navigate('/chat/' + hash, {trigger: true});
+    $.post('/api/add_buyer', {hash: hash}, function(data){
+      Backbone.history.navigate('/chat/' + hash, {trigger: true});
+    });
   });
 })();
