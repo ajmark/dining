@@ -1,3 +1,7 @@
+Backbone.history.start({pushState: true});
+Backbone.history.navigate(Backbone.history.getFragment(), {trigger: true});
+
+
 // Click handler, intercepts all links
 $(document).on('click', "a[href^='/']", function(event) {
   var href = $(event.currentTarget).attr('href');

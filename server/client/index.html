@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>Dine with DineX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,600' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/app.css">
@@ -14,51 +15,60 @@
 
   <section id="content"></section>
 
-  <!-- Templates -->
-  <script type="text/template" id="tpl-index">
-    <div id="page-index">
-      <img src="/img/dwd-logo.png" width="300" />
-      <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
-    </div>
-  </script>
+  <div class="venue-chooser dark">
+    <div class="venues">
 
-  <script type="text/template" id="tpl-choose">
-    <div id="page-choose">
-      <h1>I want to...</h1>
-      <a class="full-btn choice buy"href="/buy">look for a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
-      <a class="full-btn choice sell" href="/sell">share my funds <br /><small>I am a meallionaire.</small></a>
     </div>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-sell">
+  <div id="page-index" class="page">
+    <img src="/img/dwd-logo.png" width="300" />
+    <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
+  </div>
+
+  <div id="page-choose" class="page">
+    <h1>I want to...</h1>
+    <a class="full-btn choice buy"href="/buy">find a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
+    <a class="full-btn choice sell" href="/sell">share my wealth <br /><small>I am a meallionaire.</small></a>
+  </div>
+
+  <div id="page-sell" class="page">
+
     <form action="http://whothehellknows:8000/check-post" method="post">
-      <div id="location"> Where are you?    
+      <div class="title">
+        <h1>Share My Wealth</h1>
       </div>
 
-      <div> 
-        <a href="" class="block"> Block </a>
-        <a href="" class="dinex"> DineX </a>
+      <div class="type-choice"> 
+        <a href="#" class="block"> Block </a>
+        <a href="#" class="dinex"> DineX </a>
       </div>
 
-      <div id="">
-        <input type="number"/> 
-      </div>
-
-      <div id="">
-        <input type="checkbox"> Company? 
+      <div id="foursquare" class="input-field">
+        Where are you?    
       </div>
 
       <div id="">
-        <textarea> </textarea>
+        <input type="number" pattern="\d+(\.\d{2})?" placeholder="Offer price" class="input-field"/> 
       </div>
+
+      <div id="" class="input-field">
+        <label for="eat-with">Eat with me! <input type="checkbox" class="eat-with" /></label>
+      </div>
+
+      <div id="">
+        <textarea class="input-field" placeholder="Message"></textarea>
+      </div>
+
+      <input type="submit" class="input-field" value="Go" />
     </form>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-buy">
+  <div id="page-buy" class="page">
     <div id="map-canvas"></div>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-buyListing">
+  <div id="page-buyListing" class="page">
     <h1>Chat with <%= seller_name %></h1>
     <h3>Current Amount Owed: <%= amt %></h3>
     <button type ="button" id="cash">CASH</button>
@@ -68,19 +78,21 @@
       <input type="text" name="message">
       <input type="submit" name="send">
     </form>
-  </script>
+  </div>
 
   <!-- Javascript -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW3pwvWQ4GAD2kVSnQIAZSzg8oONQtHJs&sensor=true"></script>
   <script src="/js/lib/jquery-1.10.2.min.js"></script>
   <script src="/js/lib/underscore-min.js"></script>
   <script src="/js/lib/backbone-min.js"></script>
-  <script src="/js/views/IndexView.js"></script>
-  <script src="/js/views/ChooseView.js"></script>
-  <script src="/js/views/BuyListingView.js"></script>
-  <script src="/js/views/BuyView.js"></script>
-  <script src="/js/views/SellView.js"></script>
-  <script src="/js/Router.js"></script>
+
+  <script src="js/buy.js"></script>
+  <script src="js/sell.js"></script>
+
+  <script src="/js/router.js"></script>
+  
   <script src="/js/app.js"></script>
+
+
 </body>
 </html>
