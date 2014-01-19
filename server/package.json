@@ -16,6 +16,7 @@
     "MD5": "~1.2.0",
     "request": "latest",
     "mailgun-js": "latest",
-    "priorityqueuejs": "~0.1.0"
+    "priorityqueuejs": "~0.1.0",
+    "passport-dwolla": "~0.1.2"
   }
 }

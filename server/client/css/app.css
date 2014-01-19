@@ -169,6 +169,7 @@ body {
   color: #F9F9F9;
 }
 
+<<<<<<< HEAD
 /* ===========================
   BUY SCREEN
 ============================== */
@@ -231,4 +232,12 @@ body {
 
 #message {
   height: 130px;
+=======
+#page-sell #foursquare{
+  cursor: pointer;
+}
+
+#page-sell .blockDinexSelect.selected{
+  background-color: green;
+>>>>>>> a202c53b1e61a33aa1cd365cb1cda771f6958bb3
 }
