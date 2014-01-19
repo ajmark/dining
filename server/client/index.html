@@ -16,6 +16,11 @@
   <section id="content"></section>
 
   <div class="venue-chooser dark">
+    <div class="search">
+      <form>
+        <input type="text"  />
+      </form>
+    </div>
     <div class="venues">
 
     </div>
@@ -40,8 +45,13 @@
       </div>
 
       <div class="type-choice"> 
+<<<<<<< HEAD
         <a href="#" class="blockDinexSelect">Block</a>
         <a href="#" class="blockDinexSelect">DineX</a>
+=======
+        <a href="#" class="block">Block</a>
+        <a href="#" class="dinex">DineX</a>
+>>>>>>> 81a87db2cabed477870cb444c09e7d5d773c4dff
       </div>
 
       <div id="foursquare" class="input-field">
@@ -49,11 +59,19 @@
       </div>
 
       <div id="">
+<<<<<<< HEAD
         <input id="listingRate" type="number" pattern="\d+(\.\d{2})?" placeholder="Offer price" class="input-field"/> 
       </div>
 
       <div id="">
         <input id="listingStatus" placeholder="Status" value="Eat with me!" type="text" class="input-field">
+=======
+        <input type="number" min="0" pattern="\d+(\.\d{2})?" placeholder="Offer price" class="input-field"/> 
+      </div>
+
+      <div id="eatwith" class="input-field">
+        <label for="eat-with">Eat with me! <input type="checkbox" class="eat-with" /></label>
+>>>>>>> 81a87db2cabed477870cb444c09e7d5d773c4dff
       </div>
 
       <div id="">
@@ -62,10 +80,6 @@
 
       <input type="submit" class="input-field" value="Go" />
     </form>
-  </div>
-
-  <div id="page-buy" class="page">
-    <div id="map-canvas"></div>
   </div>
 
   <div id="page-buyListing" class="page">
@@ -78,6 +92,35 @@
       <input type="text" name="message">
       <input type="submit" name="send">
     </form>
+  </div>
+
+  <div id="page-buy" class="page">
+    <div class="type-choice"> 
+      <a href="#" class="yes"> Yes </a>
+      <a href="#" class="no"> No </a>
+      <div class="title"><h1>Accept? </h1></div>    
+    </div>
+
+    <div id="seller-info">
+      <img src='https://graph.facebook.com/li.lindaxu/picture?width=75&height=75'> 
+      <h2 class="name"> SELLER NAME</h2>
+    </div>
+
+    <div class="section">
+      Location
+    </div>
+
+    <div class="section">
+      Price
+    </div>
+
+    <div class="section">
+      I would like to eat with you! 
+    </div>
+
+    <div id="message" class = "section">
+      Message!
+    </div>
   </div>
 
   <div id="page-chat" class="page">

@@ -34,9 +34,15 @@
       $('.page').hide();
       $('#page-buyListing').show();
     },
+<<<<<<< HEAD
     rte_chat: function(){
       $('.page').hide();
       $("#page-chat").show();
+=======
+    rte_sellListing: function(id) {
+      $('.page').hide();
+      $('#page-sellListing').show();
+>>>>>>> 81a87db2cabed477870cb444c09e7d5d773c4dff
     }
   });
 
