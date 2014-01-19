@@ -98,10 +98,10 @@ $(window).load(function(){
 	$(".blockDinexSelect").click(function(){
 		$(".blockDinexSelect").removeClass("selected");
 		if ($(this).html() === "Block"){
-			$("#listingRate").attr("placeholder", "Percentage");
+			$("#listingRate").attr("placeholder", "Price");
 		}
 		else if($(this).html() === "DineX"){
-			$("#listingRate").attr("placeholder", "Price");
+			$("#listingRate").attr("placeholder", "Percentage");
 		}
 		$(this).addClass("selected");
 	});
