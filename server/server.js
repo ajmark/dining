@@ -302,21 +302,44 @@ app.get("/api/get_listings", function(req, res){
 // });
 
 // To get chats between 2 people
-app.get('/api/get_chats', function(req,res) {
-	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
-  + req.query.from + " AND toID = " + req.query.to
-  + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
-  + " AND (id>" + req.query.lastID + ")";
+// app.get('/api/get_chats', function(req,res) {
+// 	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
+//   + req.query.from + " AND toID = " + req.query.to
+//   + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
+//   + " AND (id>" + req.query.lastID + ")";
 
-	db.serialize(function() {
-		db.all(query_string, function(err, rows) {
-			if(err) {
-				console.log(err);
-			}
-			res.send(rows);
-		});
-	});
+// 	db.serialize(function() {
+// 		db.all(query_string, function(err, rows) {
+// 			if(err) {
+// 				console.log(err);
+// 			}
+// 			res.send(rows);
+// 		});
+// 	});
+// });
+
+app.get("/api/get_chats", function(req, res){
+	var hash = req.query.hash;
+	db.all("SELECT *\
+			FROM listing\
+				INNER JOIN chats\
+				ON (chats.fromID = listing.user_id\
+					AND chats.toId = listing.buyer_id)\
+				OR (chats.fromID = listing.buyer_id\
+					AND chats.toId = listing.user_id)\
+			WHERE hash = $hash",
+			{
+				$hash : hash
+			}, function(err, rows){
+				if (err){
+					console.log(err);
+				}
+				else{
+					res.send(rows);
+				}
+			});
 });
+
 
 // To get all chats for debugging purposes
 app.get('/api/get_all_chats', function(req,res) {
@@ -331,6 +354,7 @@ app.get('/api/get_all_chats', function(req,res) {
     });
   });
 });
+
 
 // To update chat when a user sends a message
 app.post('/api/send_message', function(req, res){
