@@ -64,10 +64,6 @@
     </form>
   </div>
 
-  <div id="page-buy" class="page">
-    <div id="map-canvas"></div>
-  </div>
-
   <div id="page-buyListing" class="page">
     <h1>Chat with <%= seller_name %></h1>
     <h3>Current Amount Owed: <%= amt %></h3>
@@ -78,6 +74,35 @@
       <input type="text" name="message">
       <input type="submit" name="send">
     </form>
+  </div>
+
+  <div id="page-buy" class="page">
+    <div class="type-choice"> 
+      <a href="#" class="yes"> Yes </a>
+      <a href="#" class="no"> No </a>
+      <div class="title"><h1>Accept? </h1></div>    
+    </div>
+
+    <div id="seller-info">
+      <img src='https://graph.facebook.com/li.lindaxu/picture?width=75&height=75'> 
+      <h2 class="name"> SELLER NAME</h2>
+    </div>
+
+    <div class="section">
+      Location
+    </div>
+
+    <div class="section">
+      Price
+    </div>
+
+    <div class="section">
+      I would like to eat with you! 
+    </div>
+
+    <div id="message" class = "section">
+      Message!
+    </div>
   </div>
 
   <div id="page-chat" class="page">

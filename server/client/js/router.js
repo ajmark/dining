@@ -32,6 +32,10 @@
     rte_buyListing: function(id) {
       $('.page').hide();
       $('#page-buyListing').show();
+    },
+    rte_sellListing: function(id) {
+      $('.page').hide();
+      $('#page-sellListing').show();
     }
   });
 

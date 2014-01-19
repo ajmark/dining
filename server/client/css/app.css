@@ -168,3 +168,67 @@ body {
   font-weight: 400;
   color: #F9F9F9;
 }
+
+/* ===========================
+  BUY SCREEN
+============================== */
+
+#page-buy .type-choice {
+  height: 80px;
+  /*font-size: 30px;*/
+  text-align: center;
+}
+
+#page-buy .type-choice a {
+  text-decoration: none;
+  color: #F9F9F9;
+  font-size: 20px;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+#page-buy .type-choice a.yes {
+  float: left
+}
+
+#page-buy .type-choice a.no {
+  float: right
+}
+
+#seller-info {
+  height: 160px;
+  top: 50%;
+  left: 50%;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+#seller-info img{
+  border-radius: 50%;
+  margin-bottom: 5px;
+  margin-top: -5px;
+}
+
+#seller-info .name{
+  font-size: 25px;
+}
+
+.section {
+  background-color: #F0F0F0;
+  color: #505050;
+  padding: 0 20px;
+  height: 60px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #B6D9B7;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  line-height: 3em;
+  border-radius: 0;
+}
+
+#message {
+  height: 130px;
+}
