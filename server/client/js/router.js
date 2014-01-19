@@ -14,25 +14,24 @@
       'buy/:id': 'rte_buyListing'
     },
     rte_index: function() {
-      this.currentView = new App.Views.IndexView();
-      $('#content').html(this.currentView.render().el);
+      $('.page').hide();
+      $('#page-index').show();
     },
     rte_choose: function() {
-      this.currentView = new App.Views.ChooseView();
-      $('#content').html(this.currentView.render().el);
+      $('.page').hide();
+      $('#page-choose').show();
     },
     rte_sell: function() {
-      this.currentView = new App.Views.SellView();
-      $('#content').html(this.currentView.render().el);
+      $('.page').hide();
+      $('#page-sell').show();
     },
     rte_buy: function(id) {
-      this.currentView = new App.Views.BuyView();
-      $('#content').html(this.currentView.render().el);
-      this.currentView.renderMap();
+      $('.page').hide();
+      $('#page-buy').show();
     },
     rte_buyListing: function(id) {
-      this.currentView = new App.Views.BuyListingView();
-      $('#content').html(this.currentView.render().el);
+      $('.page').hide();
+      $('#page-buyListing').show();
     }
   });
 

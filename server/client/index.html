@@ -21,23 +21,18 @@
     </div>
   </div>
 
-  <!-- Templates -->
-  <script type="text/template" id="tpl-index">
-    <div id="page-index">
-      <img src="/img/dwd-logo.png" width="300" />
-      <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
-    </div>
-  </script>
+  <div id="page-index" class="page">
+    <img src="/img/dwd-logo.png" width="300" />
+    <a href="/auth/facebook" rel="nojs" class="full-btn signin-btn">Sign in with facebook</a>
+  </div>
 
-  <script type="text/template" id="tpl-choose">
-    <div id="page-choose">
-      <h1>I want to...</h1>
-      <a class="full-btn choice buy"href="/buy">find a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
-      <a class="full-btn choice sell" href="/sell">share my wealth <br /><small>I am a meallionaire.</small></a>
-    </div>
-  </script>
+  <div id="page-choose" class="page">
+    <h1>I want to...</h1>
+    <a class="full-btn choice buy"href="/buy">find a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
+    <a class="full-btn choice sell" href="/sell">share my wealth <br /><small>I am a meallionaire.</small></a>
+  </div>
 
-  <script type="text/template" id="tpl-sell">
+  <div id="page-sell" class="page">
 
     <form action="http://whothehellknows:8000/check-post" method="post">
       <div class="title">
@@ -67,13 +62,13 @@
 
       <input type="submit" class="input-field" value="Go" />
     </form>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-buy">
+  <div id="page-buy" class="page">
     <div id="map-canvas"></div>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-buyListing">
+  <div id="page-buyListing" class="page">
     <h1>Chat with <%= seller_name %></h1>
     <h3>Current Amount Owed: <%= amt %></h3>
     <button type ="button" id="cash">CASH</button>
@@ -83,11 +78,11 @@
       <input type="text" name="message">
       <input type="submit" name="send">
     </form>
-  </script>
+  </div>
 
-  <script type="text/template" id="tpl-venueChooser">
+  <div id="page-venueChooser" class="page">
     <%= venues %>
-  </script>
+  </div>
 
   <!-- Javascript -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW3pwvWQ4GAD2kVSnQIAZSzg8oONQtHJs&sensor=true"></script>
