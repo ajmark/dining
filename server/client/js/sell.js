@@ -84,7 +84,7 @@ $(window).load(function(){
 						alert("Error adding listing");
 					}
 					else{
-						window.location = "/chat/" + results.hash;
+    					Backbone.history.navigate('/chat/' + results.hash, {trigger: true});
 					}
 				},
 				error: function(err){

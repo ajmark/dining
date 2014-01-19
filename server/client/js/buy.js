@@ -36,6 +36,6 @@
   });
 
   $('#page-buy .yes').click(function() {
-    Backbone.history.navigate('/buy/' + hash, {trigger: true});
+    Backbone.history.navigate('/chat/' + hash, {trigger: true});
   });
 })();
