@@ -270,7 +270,10 @@ app.post("/api/add_buyer", function(req,res){
 			{
 				$userId : userId,
 				$hash : hash
+			}, function(err) {
+				res.send(200);
 			});
+	
 });
 
 /* why is get_listings so minimalist now :O */
