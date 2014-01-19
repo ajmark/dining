@@ -7,7 +7,7 @@ $(window).load(function(){
 
 	          for (var i in data) {
 	            var a = $('<a>');
-	            a.attr('href','#').html(data[i].name + ' <br>' + data[i].addr);
+	            a.attr('href','#').html(data[i].name);
 	            a.data("lat", data[i].lat);
 	            a.data("lng", data[i].lng);
 	            ul.append($('<li>').append(a));
@@ -45,13 +45,9 @@ $(window).load(function(){
 	$("#listingForm").submit(function(e){
 		e.preventDefault();
 		var rate = $("#listingRate").val();
-		var status = $("#listingStatus").val();
 		var msg = $("#listingMsg").val();
 		if (rate === ""){
 			alert("Rate required");
-		}
-		else if (status === ""){
-			alert("Status required");
 		}
 		else if (msg === ""){
 			alert("Msg required");
@@ -61,9 +57,16 @@ $(window).load(function(){
 		}
 		else{
 			var listingType = $(".blockDinexSelect.selected").html();
-			var location = $("#foursquare").html();
+			var location = $("#foursquare");
 			var lat = $("#foursquare").data("lat");
 			var lng = $("#foursquare").data("lng");
+			console.log(location);
+			if ($("#eatwith").find("input").prop("checked")){
+				var status = "1";
+			}
+			else{
+				var status = "0";
+			}
 			$.ajax({
 				url: "/api/add_listing",
 				type: "POST",
@@ -84,6 +87,12 @@ $(window).load(function(){
 
 	$(".blockDinexSelect").click(function(){
 		$(".blockDinexSelect").removeClass("selected");
+		if ($(this).html() === "Block"){
+			$("#listingRate").attr("placeholder", "Percentage");
+		}
+		else if($(this).html() === "DineX"){
+			$("#listingRate").attr("placeholder", "Price");
+		}
 		$(this).addClass("selected");
 	});
       
