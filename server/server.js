@@ -185,9 +185,14 @@ function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS listing\
 			(user_id INTEGER PRIMARY KEY,\
 			 location TEXT,\
-			 price REAL,\
+			 lat REAL,\
+			 lng REAL,\
+			 rate REAL,\
+			 listing_type TEXT,\
 			 status TEXT,\
+			 msg TEXT,\
 			 time_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+			 buyer_id INTEGER,\
 			 hash TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS fbuser\
             (id INTEGER,\
@@ -201,87 +206,144 @@ createDbTables();
 app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
 	var location = req.body.location;
-	var price = req.body.price;
+	var lat = req.body.lat;
+	var lng = req.body.lng;
+	var rate = req.body.rate;
+	var listingType = req.body.listingType;
 	var status = req.body.status;
 	var userId = req.body.user_id; //this should be a real user id (like the one used in our database)
 	var hash = md5(req.body.location + req.body.price + req.body.status + req.body.user_id);
-	db.run("INSERT OR REPLACE INTO listing (user_id, location, price, status, hash)\
-			VALUES ($userId, $location, $price, $status, $hash)", 
+	db.run("INSERT OR REPLACE INTO listing (user_id, location, lat, lng, rate, listing_type, status, msg, hash)\
+			VALUES ($userId, $location, $lat, $lng, $rate, $listingType, $status, $msg, $hash)", 
 			{
 				$userId : req.session.userId,
 				$location : location,
+				$lat : lat,
+				$lng : lng,
 				$price : price,
+				$listingType : listingType,
 				$status : status,
+				$msg : msg,
 				$hash : hash
 			});
-	res.send({"status" : "success", 'hash' : hash});
+	res.send({'hash' : hash});
 });
 
 app.get("/api/get_listings", function(req, res){
-	//lookup by hash, by recency or by ??? (who cares man tim forgot so I forgot too)
-	if(req.query.by == "hash") {
-		var query_string = "select * from listing where hash = \"" + req.query.hash + "\"";
-		console.log(query_string);
-		// db.get("select * from listing where hash = \"$hash\"", {$hash: req.query.hash});
-		db.get(query_string, function(err,rows) {
-			console.log(rows);
-			res.send(rows);
-		});
-	}
-	else if(req.query.by == "recent") {
-		if(!req.query.until) {
-			res.send("fauck u");
-		}
-		var query_string = "select * from listing where time_listed >= (select datetime('now','-" + req.query.until + " hours'))";
-		db.serialize(function() {
-			db.all(query_string, function(err, rows) {
-				if(err) {
+	var listingType = req.query.listingType;
+	var lat = req.query.lat;
+	var lng = req.query.lng;
+	db.all("SELECT *\
+			FROM listing\
+			WHERE listing_type = $listingType\
+			AND ABS(lat - $lat) < 0.01\
+			AND ABS(lng - $lng) < 0.01",
+			{
+				$listingType : listingType,
+				$lat : req.query.lat,
+				$lng : req.query.lng
+			}, function(err,rows){
+				if (err){
 					console.log(err);
 				}
-				res.send(rows);
+				else{
+					res.send(rows);
+				}
 			});
-		});
-	}
-	else {
-		console.log("i don't know how to handle this");
-		res.send(null);
-	}
-	// db.all("SELECT * FROM listing", function(err, rows){
-	// 	res.send(rows);
-	// });
 });
 
-app.get("/api/get_all_listings_ascending", function(req,res) {
-	var pq = new PriorityQueue(function (a,b) {
-		return a.price - b.price;
-	});
-	db.serialize(function () {
-		db.each("select * from listing join fbuser on listing.user_id = fbuser.id", function(err, row) {
-			if(err) {
-				console.log(err);
-			}
-			pq.enq(row);
-		}, function(err, rows) {
-		res.send(pq);
-	})})
-});
+// app.get("/api/get_listings", function(req, res){
+// 	//lookup by hash, by recency or by ??? (who cares man tim forgot so I forgot too)
+// 	if(req.query.by == "hash") {
+// 		var query_string = "select * from listing where hash = \"" + req.query.hash + "\"";
+// 		console.log(query_string);
+// 		// db.get("select * from listing where hash = \"$hash\"", {$hash: req.query.hash});
+// 		db.get(query_string, function(err,rows) {
+// 			console.log(rows);
+// 			res.send(rows);
+// 		});
+// 	}
+// 	else if(req.query.by == "recent") {
+// 		if(!req.query.until) {
+// 			res.send("fauck u");
+// 		}
+// 		var query_string = "select * from listing where time_listed >= (select datetime('now','-" + req.query.until + " hours'))";
+// 		db.serialize(function() {
+// 			db.all(query_string, function(err, rows) {
+// 				if(err) {
+// 					console.log(err);
+// 				}
+// 				res.send(rows);
+// 			});
+// 		});
+// 	}
+// 	else {
+// 		console.log("i don't know how to handle this");
+// 		res.send(null);
+// 	}
+// 	// db.all("SELECT * FROM listing", function(err, rows){
+// 	// 	res.send(rows);
+// 	// });
+// });
+
+// app.get("/api/get_all_listings_ascending", function(req,res) {
+// 	var pq = new PriorityQueue(function (a,b) {
+// 		return a.price - b.price;
+// 	});
+// 	db.serialize(function () {
+// 		db.each("select * from listing join fbuser on listing.id = fbuser.id", function(err, row) {
+// 			if(err) {
+// 				console.log(err);
+// 			}
+// 			pq.enq(row);
+// 		}, function(err, rows) {
+// 		res.send(pq);
+// 	})})
+// });
 
 // To get chats between 2 people
-app.get('/api/get_chats', function(req,res) {
-	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
-  + req.query.from + " AND toID = " + req.query.to
-  + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
-  + " AND (id>" + req.query.lastID + ")";
+// app.get('/api/get_chats', function(req,res) {
+// 	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
+//   + req.query.from + " AND toID = " + req.query.to
+//   + ") OR (fromID = " + req.query.to + " AND toID = " + req.query.from + "))"
+//   + " AND (id>" + req.query.lastID + ")";
 
-	db.serialize(function() {
-		db.all(query_string, function(err, rows) {
-			if(err) {
-				console.log(err);
-			}
-			res.send(rows);
-		});
-	});
+// 	db.serialize(function() {
+// 		db.all(query_string, function(err, rows) {
+// 			if(err) {
+// 				console.log(err);
+// 			}
+// 			res.send(rows);
+// 		});
+// 	});
+// });
+
+app.get("/api/get_chats", function(req, res){
+	var hash = req.query.hash;
+	var userId = req.session.userId;
+	db.all("SELECT *\
+			FROM listing\
+				INNER JOIN chats\
+				ON (chats.fromID = listing.user_id\
+					AND chats.toId = listing.buyer_id)\
+				OR (chats.fromID = listing.buyer_id\
+					AND chats.toId = listing.user_id)\
+			WHERE listing.hash = $hash\
+			AND (listing.user_id = $userId\
+				 OR listing.buyer_id = $userId)",
+			{
+				$hash : hash,
+				$userId : userId
+			}, function(err, rows){
+				if (err){
+					console.log(err);
+				}
+				else{
+					res.send(rows);
+				}
+			});
 });
+
 
 // To get all chats for debugging purposes
 app.get('/api/get_all_chats', function(req,res) {
@@ -296,6 +358,7 @@ app.get('/api/get_all_chats', function(req,res) {
     });
   });
 });
+
 
 // To update chat when a user sends a message
 app.post('/api/send_message', function(req, res){
