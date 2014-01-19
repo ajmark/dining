@@ -223,7 +223,7 @@ app.post("/api/add_phone", function(req,res) {
 		res.send("fauck u");
 	}
 	db.run("UPDATE user\
-		    SET phone = $phone
+		    SET phone = $phone\
 		    WHERE id = $id",
 		    {
 		    	$phone : req.body.phone,
@@ -262,10 +262,12 @@ app.post("/api/add_listing", function(req, res){
 app.get("/api/get_listings", function(req, res){
 	var lat = req.query.lat;
 	var lng = req.query.lng;
-	db.all("SELECT listing.*, fbuser.id\
+	db.all("SELECT listing.*, fbuser.fbid, user.name AS user_name\
 			FROM listing\
 				INNER JOIN fbuser\
 					ON listing.user_id = fbuser.id\
+				INNER JOIN user\
+					ON listing.user_id = user.id\
 			WHERE ABS(lat - $lat) < 0.01\
 			AND ABS(lng - $lng) < 0.01",
 			{
@@ -541,4 +543,4 @@ app.get("/*", function(req, res){
     
 });
 
-app.listen(3000);
+app.listen(80);
