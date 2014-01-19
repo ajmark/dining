@@ -57,7 +57,7 @@ $(window).load(function(){
 		}
 		else{
 			var listingType = $(".blockDinexSelect.selected").html();
-			var location = $("#foursquare");
+			var location = $("#foursquare").html();
 			var lat = $("#foursquare").data("lat");
 			var lng = $("#foursquare").data("lng");
 			console.log(location);
@@ -78,9 +78,19 @@ $(window).load(function(){
 					"listingType" : listingType,
 					"status" : status,
 					"msg" : msg
+				},
+				success: function(results){
+					if (results === undefined || results.hash === undefined || results.hash === ""){
+						alert("Error adding listing");
+					}
+					else{
+						window.location = "/chat/" + results.hash;
+					}
+				},
+				error: function(err){
+					alert("Error adding listing");
 				}
 			});
-			window.location="/chat";
 		}
 
 	});

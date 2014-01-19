@@ -1,5 +1,4 @@
-$(window).load(function(){
-	var hash = $("#chatHash").html();
+function initChat(hash){
 	$.ajax({
 		url: "/api/get_chats",
 		type: "GET",
@@ -40,4 +39,4 @@ $(window).load(function(){
 			});
 		}
 	});
-});
+}
