@@ -16,5 +16,16 @@ $(window).load(function(){
 	        $(".venue-chooser").fadeIn();
 	      });
 	});
+
+	$(document).click(function (e){
+	    if (!$(".venues").is(e.target) && $(".venues").has(e.target).length === 0){
+	        $(".venue-chooser").fadeOut();
+	    }
+	});
+
+	$(".venues").on("click", "a", function(){
+		$("#foursquare").html($(this).html());
+		$(".venue-chooser").fadeOut();
+	});
       
 });
