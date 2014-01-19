@@ -270,8 +270,8 @@ app.get("/api/get_listings", function(req, res){
 				INNER JOIN user\
 					ON listing.user_id = user.id\
 			WHERE listing.user_id != $userId\
-			AND ABS(lat - $lat) < 0.01\
-			AND ABS(lng - $lng) < 0.01",
+			AND ABS(lat - $lat) < 0.03\
+			AND ABS(lng - $lng) < 0.03",
 			{
 				$lat : req.query.lat,
 				$lng : req.query.lng,

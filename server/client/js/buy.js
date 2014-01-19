@@ -23,6 +23,7 @@
         "lng" : position.coords.longitude
       },
       success: function(results) {
+      	console.log(results);
         dataArray = results;
         bindData(results[currItem]);
       }
