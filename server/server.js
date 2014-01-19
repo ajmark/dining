@@ -337,8 +337,6 @@ app.get("/api/get_listings", function(req, res){
 app.get("/api/get_chats", function(req, res){
 	var hash = req.query.hash;
 	var userId = req.session.userId;
-	console.log("GET chat");
-	console.log(req.session.userId);
 	db.all("SELECT chats.fromID, chats.toID, chats.msg\
 			FROM listing\
 				INNER JOIN chats\
@@ -357,6 +355,14 @@ app.get("/api/get_chats", function(req, res){
 					console.log(err);
 				}
 				else{
+					for (var i = 0; i < rows.length; i++){
+						if (rows[i].fromID === userId){
+							rows[i].sender = "self";
+						}
+						else if(rows[i].toID === userId){
+							rows[i].sender = "other";
+						}
+					}
 					res.send(rows);
 				}
 			});

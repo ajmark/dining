@@ -6,9 +6,16 @@ $(window).load(function(){
 		data: {
 			"hash" : hash
 		},
-		success: function(results){
-			console.log("done");
-			console.log(results);
+		success: function(chatObjArr){
+			console.log(chatObjArr);
+			for (var i = 0; i < chatObjArr.length; i++){
+				if (chatObjArr[i].sender === "self"){
+					$("#chatArea").append("<div class='me'><span>" + chatObjArr[i].msg + "</span></div>");
+				}
+				else{
+					$("#chatArea").append("<div class='you'><span>" + chatObjArr[i].msg + "</span></div>");
+				}
+			}
 		}
 	});
 
