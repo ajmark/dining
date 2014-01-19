@@ -258,6 +258,18 @@ app.post("/api/add_listing", function(req, res){
 	res.send({'hash' : hash});
 });
 
+app.post("/api/add_buyer", function(req,res){
+	var userId = req.session.userId;
+	var hash = req.body.hash;
+	db.run("UPDATE listing\
+			SET buyer_id = $userId\
+			WHERE hash = $hash",
+			{
+				$userId : userId,
+				$hash : hash
+			});
+});
+
 /* why is get_listings so minimalist now :O */
 app.get("/api/get_listings", function(req, res){
 	var lat = req.query.lat;
