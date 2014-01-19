@@ -172,3 +172,7 @@ body {
 #page-sell #foursquare{
   cursor: pointer;
 }
+
+#page-sell .blockDinexSelect.selected{
+  background-color: green;
+}

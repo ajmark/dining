@@ -220,8 +220,9 @@ app.post("/api/add_listing", function(req, res){
 	var rate = req.body.rate;
 	var listingType = req.body.listingType;
 	var status = req.body.status;
+	var msg = req.body.msg;
 	var userId = req.body.user_id; //this should be a real user id (like the one used in our database)
-	var hash = md5(req.body.location + req.body.price + req.body.status + req.body.user_id);
+	var hash = md5(req.body.location + req.body.rate + req.body.status + req.body.user_id);
 	db.run("INSERT OR REPLACE INTO listing (user_id, location, lat, lng, rate, listing_type, status, msg, hash)\
 			VALUES ($userId, $location, $lat, $lng, $rate, $listingType, $status, $msg, $hash)", 
 			{
@@ -229,7 +230,7 @@ app.post("/api/add_listing", function(req, res){
 				$location : location,
 				$lat : lat,
 				$lng : lng,
-				$price : price,
+				$rate : rate,
 				$listingType : listingType,
 				$status : status,
 				$msg : msg,

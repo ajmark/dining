@@ -32,5 +32,49 @@ $(window).load(function(){
 		$("#foursquare").data("lng", $(this).data("lng"));
 		$(".venue-chooser").fadeOut();
 	});
+
+	$("#listingForm").submit(function(e){
+		e.preventDefault();
+		var rate = $("#listingRate").val();
+		var status = $("#listingStatus").val();
+		var msg = $("#listingMsg").val();
+		if (rate === ""){
+			alert("Rate required");
+		}
+		else if (status === ""){
+			alert("Status required");
+		}
+		else if (msg === ""){
+			alert("Msg required");
+		}
+		else if ($(".blockDinexSelect.selected")[0] === undefined){
+			alert("Select block or dinex");
+		}
+		else{
+			var listingType = $(".blockDinexSelect.selected").html();
+			var location = $("#foursquare").html();
+			var lat = $("#foursquare").data("lat");
+			var lng = $("#foursquare").data("lng");
+			$.ajax({
+				url: "/api/add_listing",
+				type: "POST",
+				data: {
+					"location" : location,
+					"lat" : lat,
+					"lng" : lng,
+					"rate" : rate,
+					"listingType" : listingType,
+					"status" : status,
+					"msg" : msg
+				}
+			});
+		}
+
+	});
+
+	$(".blockDinexSelect").click(function(){
+		$(".blockDinexSelect").removeClass("selected");
+		$(this).addClass("selected");
+	});
       
 });
