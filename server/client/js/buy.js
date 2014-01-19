@@ -1,6 +1,6 @@
 (function() {
 
-  var dataArray;
+  var dataArray = [];
   var currItem = 0;
   var hash = null;
 
@@ -25,7 +25,7 @@
       success: function(results) {
       	console.log(results);
         dataArray = results;
-        //bindData(results[currItem]);
+        bindData(results[currItem]);
       }
     });
   });
