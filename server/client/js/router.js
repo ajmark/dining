@@ -30,7 +30,7 @@
       $('#content').html(this.currentView.render().el);
       this.currentView.renderMap();
     },
-    rte_buyListing: function() {
+    rte_buyListing: function(id) {
       this.currentView = new App.Views.BuyListingView();
       $('#content').html(this.currentView.render().el);
     }
