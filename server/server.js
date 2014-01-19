@@ -10,6 +10,7 @@ var api_key = 'key-1mj5tl1vgic26dvad2iruu9uun5vmq66';
 var domain = 'sandbox87220.mailgun.org';
 var mailgun = require('mailgun-js')(api_key, domain);
 var PriorityQueue = require('priorityqueuejs');
+var dwolla = require('passport-dwolla');
 
 var passport = require('passport');
 
