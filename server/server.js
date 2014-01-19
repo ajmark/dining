@@ -45,7 +45,7 @@ done(null, obj);
 passport.use(new FacebookStrategy({
     clientID: '676552805730069',
     clientSecret: '5c8d7826b50a1474c42d9d46ce30a4fd',
-    callbackURL: "http://localhost/auth/facebook/callback"
+    callbackURL: "http://dinewithdinex.com/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     //check user table for anyone with a facebook ID of profile.id
