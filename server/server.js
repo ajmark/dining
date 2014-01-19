@@ -169,9 +169,6 @@ app.get('/get_friends', function(req,res) {
     request.end();
 });
 
-/** */
-
-
 /* noob tim creating SQL tables */
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
@@ -259,7 +256,7 @@ app.get("/api/get_all_listings_ascending", function(req,res) {
 		return a.price - b.price;
 	});
 	db.serialize(function () {
-		db.each("select * from listing join fbuser on listing.id = fbuser.id", function(err, row) {
+		db.each("select * from listing join fbuser on listing.user_id = fbuser.id", function(err, row) {
 			if(err) {
 				console.log(err);
 			}
@@ -313,6 +310,9 @@ app.post('/api/send_message', function(req, res){
     });
   });
 });
+
+
+
 
 
 /** given coordinates, returns 30 nearby venues */
