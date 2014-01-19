@@ -183,7 +183,6 @@ body {
 
 #page-buy .type-choice {
   height: 80px;
-  /*font-size: 30px;*/
   text-align: center;
 }
 
@@ -216,6 +215,7 @@ body {
   border-radius: 50%;
   margin-bottom: 5px;
   margin-top: 12px;
+  width: 150px;
 }
 
 #seller-info .name{
@@ -223,13 +223,13 @@ body {
 }
 
 .section {
-  background-color: #F0F0F0;
-  color: #505050;
+  background-color: rgba(66, 63, 63, 0.13);
+  color: #F1EFEF;
   padding: 0 20px;
   height: 60px;
   width: 100%;
   border: none;
-  border-bottom: 1px solid #B6D9B7;
+  border-bottom: 1px solid #4DD751;
   font-size: 20px;
   font-family: "Roboto", sans-serif;
   font-weight: 300;
@@ -252,31 +252,56 @@ body {
   CHAT SCREEN
 ============================== */
 #page-chat{
-  height: 600px;
 }
 
-#page-chat .chatArea{
-  height: 800px;
-  overflow-y: scroll
+#page-chat #chatArea{
+  padding-bottom: 80px;
+}
+
+#page-chat #send{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+  color: #000000;
+  background-color: rgba(83, 83, 83, 0.53);
+  padding: 7.5px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  border-radius: 0;
+  font-size: 13px;
 }
 
 #page-chat .me{
   display: block;
   text-align: left;
+  margin-top: 12px;
+  width: 70%;
+  /*position: absolute;*/
+  /*left: 10px;*/
+  margin-right: auto;
+  padding-left: 10px;
 }
 
 #page-chat .you{
   display: block;
+  margin-top: 30px;
+  width: 70%;
+  /*position: absolute;*/
+  /*right: 10px;*/
   text-align: right;
+  margin-left: auto;
+  padding-right: 10px;
 }
 
 #page-chat .me div{
   position: relative;
-  background-color: red;
+  background-color: rgba(255, 255, 255, 0.35);
   padding: 7px 15px;
   border-radius: 10px;
   font-size: 20;
   display: inline-block;
+  color: black;
 }
 
 #page-chat .me div .arrow{
@@ -284,15 +309,15 @@ body {
   content: "";
   width: 0;
   border-style: solid;
-  border-width: 15px 8px 0px 8px;
-  border-color: red transparent;
+  border-width: 12px 6px 0px 6px;
+  border-color: rgba(255, 255, 255, 0.35) transparent;
   left: 10px;
-  bottom: -10px;
+  bottom: -11.5px;
 }
 
 #page-chat .you div{
   position: relative;
-  background-color: red;
+  background-color: rgba(88, 88, 88, 0.4);
   padding: 7px 15px;
   border-radius: 10px;
   font-size: 20;
@@ -304,50 +329,27 @@ body {
   content: "";
   width: 0;
   border-style: solid;
-  border-width: 15px 8px 0px 8px;
-  border-color: red transparent;
+  border-width: 12px 6px 0px 6px;
+  border-color: rgba(88, 88, 88, 0.4) transparent;
   right: 10px;
-  bottom: -10px;
+  bottom: -11.5px;
 }
-
-/*
-#page-chat .you span{
-
-position: relative;
-width: 250px;
-height: 120px;
-padding: 0px;
-background: #000000;
--webkit-border-radius: 40px;
--moz-border-radius: 40px;
-border-radius: 40px;
-}
-
-#page-chat .you span:after{
-content: "";
-position: absolute;
-top: 40px;
-left: -29px;
-border-style: solid;
-border-width: 20px 29px 20px 0;
-border-color: transparent #000000;
-display: block;
-width: 0;
-z-index: 1;
-
-}*/
 
 #page-chat .input-field {
+  position: fixed;
   background-color: #F0F0F0;
   color: #505050;
-  padding: 0 20px;
-  height: 60px;
+  padding: 0 10px;
+  height: 40px;
   width: 100%;
   border: none;
   border-bottom: 1px solid #B6D9B7;
-  font-size: 20px;
+  font-size: 15px;
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   line-height: 3em;
   border-radius: 0;
+  bottom: 0;
 }
+
+

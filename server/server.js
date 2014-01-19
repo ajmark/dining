@@ -217,6 +217,20 @@ createDbTables();
 
 //app.use(cors());
 
+app.post("/api/add_phone", function(req,res) {
+	console.log(req.body);
+	if(!req.body.phone || !req.body.user) {
+		res.send("fauck u");
+	}
+	db.run("UPDATE user\
+		    SET phone = $phone
+		    WHERE id = $id",
+		    {
+		    	$phone : req.body.phone,
+		    	$id : req.body.id
+		    });
+});
+
 app.post("/api/add_listing", function(req, res){
 	console.log(req.body);
 	var location = req.body.location;
