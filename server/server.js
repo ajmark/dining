@@ -246,16 +246,15 @@ app.post("/api/add_listing", function(req, res){
 
 /* why is get_listings so minimalist now :O */
 app.get("/api/get_listings", function(req, res){
-	var listingType = req.query.listingType;
 	var lat = req.query.lat;
 	var lng = req.query.lng;
-	db.all("SELECT *\
+	db.all("SELECT listing.*, fbuser.id\
 			FROM listing\
-			WHERE listing_type = $listingType\
-			AND ABS(lat - $lat) < 0.01\
+				INNER JOIN fbuser\
+					ON listing.user_id = fbuser.id\
+			WHERE ABS(lat - $lat) < 0.01\
 			AND ABS(lng - $lng) < 0.01",
 			{
-				$listingType : listingType,
 				$lat : req.query.lat,
 				$lng : req.query.lng
 			}, function(err,rows){
