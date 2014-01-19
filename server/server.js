@@ -169,9 +169,6 @@ app.get('/get_friends', function(req,res) {
     request.end();
 });
 
-/** */
-
-
 /* noob tim creating SQL tables */
 function createDbTables(){
 	db.run("CREATE TABLE IF NOT EXISTS user\
@@ -304,7 +301,6 @@ app.get("/api/get_listings", function(req, res){
 // 	})})
 // });
 
-
 // To get chats between 2 people
 app.get('/api/get_chats', function(req,res) {
 	var query_string = "SELECT * FROM chats WHERE ((fromID = " 
@@ -349,6 +345,9 @@ app.post('/api/send_message', function(req, res){
     });
   });
 });
+
+
+
 
 
 /** given coordinates, returns 30 nearby venues */
