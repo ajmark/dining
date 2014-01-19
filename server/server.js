@@ -261,6 +261,9 @@ app.post("/api/add_listing", function(req, res){
 app.post("/api/add_buyer", function(req,res){
 	var userId = req.session.userId;
 	var hash = req.body.hash;
+    console.log("BUYER ADDED");
+    console.log(hash);
+    console.log(userId);
 	db.run("UPDATE listing\
 			SET buyer_id = $userId\
 			WHERE hash = $hash",
