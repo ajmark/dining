@@ -365,7 +365,8 @@ function venueInformation (error, response, body) {
     result.push({
       name: venues[i].name,
       id: venues[i].id,
-      dist: venues[i].location.dist,
+      lat: venues[i].location.lat,
+      lng: venues[i].location.lng,
       addr: venues[i].location.address,
       checkCount: venues[i].stats.checkinsCount
     });
