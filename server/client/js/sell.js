@@ -77,6 +77,7 @@ $(window).load(function(){
 					"msg" : msg
 				}
 			});
+			window.location="/chat";
 		}
 
 	});

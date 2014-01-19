@@ -33,13 +33,13 @@
 
   <div id="page-choose" class="page">
     <h1>I want to...</h1>
-    <a class="full-btn choice buy"href="/buy">find a meallionaire <br /><small>They have blocks or DineX to spare</small></a>
+    <a class="full-btn choice buy"href="/buy">find a meallionaire <br /><small>They have blocks or DineX to spare.</small></a>
     <a class="full-btn choice sell" href="/sell">share my wealth <br /><small>I am a meallionaire.</small></a>
   </div>
 
   <div id="page-sell" class="page">
 
-    <form id="listingForm" action="http://whothehellknows:8000/check-post" method="post">
+    <form id="listingForm">
       <div class="title">
         <h1>Share My Wealth</h1>
       </div>
@@ -69,18 +69,6 @@
     </form>
   </div>
 
-  <div id="page-buyListing" class="page">
-    <h1>Chat with <%= seller_name %></h1>
-    <h3>Current Amount Owed: <%= amt %></h3>
-    <button type ="button" id="cash">CASH</button>
-    <button type ="button" id="venmo">VENMO</button>
-    <br> previous messages
-    <form action="what" method="post">
-      <input type="text" name="message">
-      <input type="submit" name="send">
-    </form>
-  </div>
-
   <div id="page-buy" class="page">
     <div class="type-choice"> 
       <a href="#" class="yes"> Yes </a>
@@ -93,15 +81,15 @@
       <h2 class="name"> SELLER NAME</h2>
     </div>
 
-    <div class="section">
+    <div id="loc" class="section">
       Location
     </div>
 
-    <div class="section">
+    <div id="price" class="section">
       Price
     </div>
 
-    <div class="section">
+    <div id="eat" class="section">
       I would like to eat with you! 
     </div>
 
@@ -111,8 +99,12 @@
   </div>
 
   <div id="page-chat" class="page">
-    <h1 id="chatHash">abfb4b32567954d516c84604f9bd1c6d</h1>
-    <div id="chatArea"></div>
+    <!--h1 id="chatHash">abfb4b32567954d516c84604f9bd1c6d</h1>-->
+    <div id="chatArea">
+      <div class="me"><span> hola </span> </div> 
+      <div class="you"><span>yo</span></div> 
+      <div class="me"><span>suuup</span></div> 
+    </div>
     <form action="" id="chatForm">
       <input id="chatInput" class="input-field" type="text">
       <input type="submit" value="Send">  

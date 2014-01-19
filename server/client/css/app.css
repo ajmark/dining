@@ -251,9 +251,56 @@ body {
 /* ===========================
   CHAT SCREEN
 ============================== */
-#page-chat #chatArea{
+#page-chat{
   height: 600px;
 }
+
+#page-chat .chatArea{
+  height: 800px;
+  overflow-y: scroll
+}
+
+#page-chat .me{
+  display: block;
+  text-align: left;
+}
+
+#page-chat .me span{
+  background-color: red;
+  font-size: 20;
+}
+
+#page-chat .you {
+  display: block;
+  text-align: right;
+}
+
+#page-chat .you span{
+
+position: relative;
+width: 250px;
+height: 120px;
+padding: 0px;
+background: #000000;
+-webkit-border-radius: 40px;
+-moz-border-radius: 40px;
+border-radius: 40px;
+}
+
+#page-chat .you span:after{
+content: "";
+position: absolute;
+top: 40px;
+left: -29px;
+border-style: solid;
+border-width: 20px 29px 20px 0;
+border-color: transparent #000000;
+display: block;
+width: 0;
+z-index: 1;
+
+}
+
 #page-chat .input-field {
   background-color: #F0F0F0;
   color: #505050;
