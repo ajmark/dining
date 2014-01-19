@@ -320,6 +320,7 @@ app.get("/api/get_listings", function(req, res){
 
 app.get("/api/get_chats", function(req, res){
 	var hash = req.query.hash;
+	var userId = req.session.userId;
 	db.all("SELECT *\
 			FROM listing\
 				INNER JOIN chats\
@@ -327,9 +328,12 @@ app.get("/api/get_chats", function(req, res){
 					AND chats.toId = listing.buyer_id)\
 				OR (chats.fromID = listing.buyer_id\
 					AND chats.toId = listing.user_id)\
-			WHERE hash = $hash",
+			WHERE listing.hash = $hash\
+			AND (listing.user_id = $userId\
+				 OR listing.buyer_id = $userId)",
 			{
-				$hash : hash
+				$hash : hash,
+				$userId : userId
 			}, function(err, rows){
 				if (err){
 					console.log(err);
