@@ -26,6 +26,7 @@ function initChat(hash){
 			alert("Message Empty");
 		}
 		else{
+			$("#chatInput").val("");
 			$.ajax({
 				url: "/api/send_message",
 				type: "POST",
