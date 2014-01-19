@@ -252,6 +252,7 @@ body {
   CHAT SCREEN
 ============================== */
 #page-chat{
+  margin-top: 100px;
 }
 
 #page-chat #chatArea{
@@ -272,13 +273,38 @@ body {
   font-size: 13px;
 }
 
+#page-chat #chatheader{
+  position: fixed;
+  top: 0;
+  right: 0;
+  text-decoration: none;
+  color: #000000;
+  background-color: rgba(83, 83, 83, 0.53);
+  padding: 7.5px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  border-radius: 0;
+  font-size: 13px;
+  width: 100%;
+}
+
+#page-chat #chatheader #head1 {
+  display: inline-block;
+}
+
+#page-chat #chatheader img {
+  border-radius: 50%;
+}
+
+#page-chat #chatheader .price {
+  float: right;
+}
+
 #page-chat .me{
   display: block;
   text-align: left;
   margin-top: 12px;
   width: 70%;
-  /*position: absolute;*/
-  /*left: 10px;*/
   margin-right: auto;
   padding-left: 10px;
 }
@@ -287,8 +313,6 @@ body {
   display: block;
   margin-top: 30px;
   width: 70%;
-  /*position: absolute;*/
-  /*right: 10px;*/
   text-align: right;
   margin-left: auto;
   padding-right: 10px;
